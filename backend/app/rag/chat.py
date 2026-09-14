@@ -5,7 +5,35 @@ from app.retrievers.faiss_retriever import retrieve
 
 def debug_log(settings, title, value):
     if settings.rag_debug:
-        print(f"\n[rag] {title}\n{value}\n", flush=True)
+        line = "=" * 78
+        print(f"\n{line}\n[RAG DEBUG] {title}\n{line}\n{value}\n{line}\n", flush=True)
+
+def sources_summary(pairs):
+    return "\n".join(
+        f"{i}. documento={doc.metadata.get('source')} | "
+        f"seccion={doc.metadata.get('seccion')} | "
+        f"tipo={doc.metadata.get('tipo_fuente')} | "
+        f"categoria={doc.metadata.get('categoria')} | "
+        f"score={score}"
+        for i, (doc, score) in enumerate(pairs, 1)
+    )
+
+def redacted_prompt(prompt, sources):
+    context_summary = "\n".join(
+        f"[{i}] {source.source} / {source.seccion} / {source.tipo_fuente}"
+        for i, source in enumerate(sources, 1)
+    ) or "Sin contexto documental disponible."
+    start = prompt.find("<contexto>")
+    end = prompt.find("</contexto>")
+    if start == -1 or end == -1:
+        return prompt
+    return (
+        prompt[:start]
+        + "<contexto>\n"
+        + context_summary
+        + "\n</contexto>"
+        + prompt[end + len("</contexto>"):]
+    )
 
 def history_text(history):
     return "\n".join(f"{item.role}: {item.content}" for item in history[-6:])
@@ -26,13 +54,9 @@ def answer(request, settings):
         # Recent user turns give follow-ups context without business-specific rules.
         query = "\n".join([m.content for m in request.history[-6:] if m.role == "user"]
                           + [request.message])
-        debug_log(settings, "retrieval query", query)
+        debug_log(settings, "1. QUERY USADA PARA BUSCAR EN FAISS", query)
         pairs = retrieve(query, settings)
-        debug_log(settings, "retrieved chunks", "\n".join(
-            f"{i}. {doc.metadata.get('source')} / {doc.metadata.get('seccion')} "
-            f"/ score={score}\n{doc.page_content[:700]}"
-            for i, (doc, score) in enumerate(pairs, 1)
-        ))
+        debug_log(settings, "2. DOCUMENTOS RECUPERADOS", sources_summary(pairs))
         sources = [Source(**doc.metadata, fragment=doc.page_content) for doc, _ in pairs]
     context = "\n\n".join(
         f"[{i}] {s.source} / {s.seccion}\n{s.fragment}"
@@ -43,6 +67,6 @@ def answer(request, settings):
         history=history_text(request.history), message=request.message,
     )
     if used_rag:
-        debug_log(settings, "prompt to ollama", prompt)
+        debug_log(settings, "3. PROMPT ENVIADO A OLLAMA (CONTEXTO RESUMIDO)", redacted_prompt(prompt, sources))
     return ChatResponse(answer=chat(settings, SYSTEM if used_rag else CHAT_SYSTEM, prompt),
                         used_rag=used_rag, sources=sources)
