@@ -14,6 +14,7 @@ class Settings(BaseSettings):
     top_k: int = Field(default=2, ge=1, le=10)
     chunk_size: int = 350
     chunk_overlap: int = 50
+    rag_debug: bool = False
     cors_origins: str = "http://localhost:5173,http://127.0.0.1:5173"
     model_config = SettingsConfigDict(env_file=PROJECT_ROOT / ".env", extra="ignore")
 

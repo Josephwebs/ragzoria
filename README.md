@@ -195,6 +195,7 @@ OLLAMA_BASE_URL=http://localhost:11434
 TOP_K=2
 CHUNK_SIZE=350
 CHUNK_OVERLAP=50
+RAG_DEBUG=false
 ```
 
 Significado:
@@ -205,6 +206,7 @@ Significado:
 - `TOP_K`: cantidad de chunks recuperados por consulta.
 - `CHUNK_SIZE`: tamano de cada fragmento.
 - `CHUNK_OVERLAP`: solapamiento entre fragmentos.
+- `RAG_DEBUG`: si es `true`, imprime en terminal decision, query, chunks y prompt RAG.
 
 ## API principal
 

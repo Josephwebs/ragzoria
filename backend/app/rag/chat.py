@@ -3,6 +3,10 @@ from app.models.schemas import ChatResponse, Source
 from app.prompts import DECISION, SYSTEM, CHAT_SYSTEM, RAG_PROMPT
 from app.retrievers.faiss_retriever import retrieve
 
+def debug_log(settings, title, value):
+    if settings.rag_debug:
+        print(f"\n[rag] {title}\n{value}\n", flush=True)
+
 def history_text(history):
     return "\n".join(f"{item.role}: {item.content}" for item in history[-6:])
 
@@ -12,6 +16,7 @@ def needs_rag(message, history, settings):
                     f"<mensaje>{message}</mensaje>", temperature=0)
     if decision not in {"CHAT", "RAG"}:
         raise OllamaError("Ollama debe responder CHAT o RAG en la decision.")
+    debug_log(settings, "decision", decision)
     return decision == "RAG"
 
 def answer(request, settings):
@@ -21,7 +26,13 @@ def answer(request, settings):
         # Recent user turns give follow-ups context without business-specific rules.
         query = "\n".join([m.content for m in request.history[-6:] if m.role == "user"]
                           + [request.message])
+        debug_log(settings, "retrieval query", query)
         pairs = retrieve(query, settings)
+        debug_log(settings, "retrieved chunks", "\n".join(
+            f"{i}. {doc.metadata.get('source')} / {doc.metadata.get('seccion')} "
+            f"/ score={score}\n{doc.page_content[:700]}"
+            for i, (doc, score) in enumerate(pairs, 1)
+        ))
         sources = [Source(**doc.metadata, fragment=doc.page_content) for doc, _ in pairs]
     context = "\n\n".join(
         f"[{i}] {s.source} / {s.seccion}\n{s.fragment}"
@@ -31,5 +42,7 @@ def answer(request, settings):
         context=context or "Sin contexto documental disponible.",
         history=history_text(request.history), message=request.message,
     )
+    if used_rag:
+        debug_log(settings, "prompt to ollama", prompt)
     return ChatResponse(answer=chat(settings, SYSTEM if used_rag else CHAT_SYSTEM, prompt),
                         used_rag=used_rag, sources=sources)
