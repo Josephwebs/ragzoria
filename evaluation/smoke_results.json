@@ -1,0 +1,187 @@
+[
+  {
+    "message": "hola",
+    "status": 200,
+    "expected_rag": false,
+    "response": {
+      "answer": "Hola! ¿En qué puedo ayudarte hoy?",
+      "used_rag": false,
+      "sources": []
+    }
+  },
+  {
+    "message": "Necesito acceso al servidor de produccion",
+    "status": 200,
+    "expected_rag": true,
+    "response": {
+      "answer": "Para obtener acceso al servidor de producción, necesitas aprobación del jefe directo, dueño del servicio y Seguridad TI. Además, debes registrar la ventana de uso, motivo, plan de reversa y evidencia de cambio autorizado.",
+      "used_rag": true,
+      "sources": [
+        {
+          "source": "politica_acceso_servidores.md",
+          "tipo_fuente": "internal",
+          "categoria": "internal",
+          "seccion": "Ambientes productivos",
+          "fragment": "Politica de Acceso a Servidores\nAmbientes productivos\nLos accesos a produccion requieren aprobacion del jefe directo, dueno del servicio y Seguridad TI. Para privilegios administrativos se debe registrar ventana de uso, motivo, plan de reversa y evidencia de cambio autorizado."
+        },
+        {
+          "source": "matriz_accesos_por_cargo.md",
+          "tipo_fuente": "internal",
+          "categoria": "internal",
+          "seccion": "Produccion",
+          "fragment": "Matriz de Accesos por Cargo\nProduccion\nNingun cargo recibe acceso administrador permanente a produccion por defecto. El acceso productivo se solicita caso a caso segun minimo privilegio, aprobaciones y duracion documentada."
+        }
+      ]
+    }
+  },
+  {
+    "message": "Solo lectura hasta el viernes",
+    "status": 200,
+    "expected_rag": true,
+    "response": {
+      "answer": "Para obtener acceso solo de lectura hasta el viernes al servidor de producción, necesitas aprobación del jefe directo, dueño del servicio y Seguridad TI. Debes registrar la ventana de uso, motivo y plan de reversa. No hay información suficiente sobre la duración documentada, por lo que no puedo confirmar si se requiere evidencia de cambio autorizado.",
+      "used_rag": true,
+      "sources": [
+        {
+          "source": "politica_acceso_servidores.md",
+          "tipo_fuente": "internal",
+          "categoria": "internal",
+          "seccion": "Ambientes productivos",
+          "fragment": "Politica de Acceso a Servidores\nAmbientes productivos\nLos accesos a produccion requieren aprobacion del jefe directo, dueno del servicio y Seguridad TI. Para privilegios administrativos se debe registrar ventana de uso, motivo, plan de reversa y evidencia de cambio autorizado."
+        },
+        {
+          "source": "matriz_accesos_por_cargo.md",
+          "tipo_fuente": "internal",
+          "categoria": "internal",
+          "seccion": "Produccion",
+          "fragment": "Matriz de Accesos por Cargo\nProduccion\nNingun cargo recibe acceso administrador permanente a produccion por defecto. El acceso productivo se solicita caso a caso segun minimo privilegio, aprobaciones y duracion documentada."
+        }
+      ]
+    }
+  },
+  {
+    "message": "El lunes entra Camila como analista contable",
+    "status": 200,
+    "expected_rag": true,
+    "response": {
+      "answer": "Camila, como analista contable, tiene acceso a correo corporativo, Microsoft 365, MFA, acceso a carpetas del área Finanzas y SAP con perfil de consulta o contabilización según sea aprobado. Además, puede recibir un notebook estandar con Microsoft 365 y aplicaciones financieras aprobadas por la matriz de accesos.",
+      "used_rag": true,
+      "sources": [
+        {
+          "source": "matriz_accesos_por_cargo.md",
+          "tipo_fuente": "internal",
+          "categoria": "internal",
+          "seccion": "Analista contable",
+          "fragment": "Matriz de Accesos por Cargo\nAnalista contable\nEl perfil base de analista contable incluye correo corporativo, Microsoft 365, MFA, acceso a carpetas del area Finanzas, SAP con perfil de consulta o contabilizacion segun funcion aprobada y acceso VPN solo si la modalidad lo requiere."
+        },
+        {
+          "source": "catalogo_equipamiento_ti.md",
+          "tipo_fuente": "internal",
+          "categoria": "internal",
+          "seccion": "Perfil contable",
+          "fragment": "Catalogo de Equipamiento TI\nPerfil contable\nPara cargos contables se prepara notebook estandar, Microsoft 365, acceso a impresora del area cuando aplique, MFA y aplicaciones financieras aprobadas por la matriz de accesos."
+        }
+      ]
+    }
+  },
+  {
+    "message": "Denle a Juan los mismos permisos que Pedro",
+    "status": 200,
+    "expected_rag": true,
+    "response": {
+      "answer": "No hay información suficiente para aprobar accesos. Es necesario identificar el cargo, tarea, sistema, permiso específico, duración y aprobador correspondiente.",
+      "used_rag": true,
+      "sources": [
+        {
+          "source": "politica_minimo_privilegio.md",
+          "tipo_fuente": "internal",
+          "categoria": "internal",
+          "seccion": "Copia de permisos",
+          "fragment": "Politica de Minimo Privilegio\nCopia de permisos\nLa frase \"mismos permisos que otra persona\" no es evidencia suficiente para aprobar accesos. Debe identificarse cargo, tarea, sistema, permiso especifico, duracion y aprobador correspondiente."
+        },
+        {
+          "source": "politica_acceso_servidores.md",
+          "tipo_fuente": "internal",
+          "categoria": "internal",
+          "seccion": "Duracion",
+          "fragment": "Politica de Acceso a Servidores\nDuracion\nLos accesos temporales deben tener fecha de termino. Los permisos de solo lectura pueden aprobarse por periodos acotados si existe justificacion. Los permisos administrativos en produccion no deben quedar permanentes y se revisan al cierre del ticket."
+        }
+      ]
+    }
+  },
+  {
+    "message": "Cual es la politica interna para comprar computadoras cuanticas?",
+    "status": 200,
+    "expected_rag": true,
+    "response": {
+      "answer": "No hay información suficiente en el contexto proporcionado sobre políticas internas para comprar computadoras cuánticas. La información disponible se refiere a Microsoft Entra Conditional Access y MFA, no a la compra de computadoras cuánticas.",
+      "used_rag": true,
+      "sources": [
+        {
+          "source": "microsoft_conditional_access_overview.md",
+          "tipo_fuente": "external",
+          "categoria": "external",
+          "seccion": "Policy engine",
+          "fragment": "Microsoft Entra Conditional Access Overview\nPolicy engine\nMicrosoft Entra Conditional Access is a policy engine that evaluates signals such as user, device, location, application and detected risk. Policies can require actions such as multifactor authentication, compliant device checks or blocking access."
+        },
+        {
+          "source": "microsoft_entra_mfa_overview.md",
+          "tipo_fuente": "external",
+          "categoria": "external",
+          "seccion": "Recommended use",
+          "fragment": "Microsoft Entra MFA Overview\nRecommended use\nFor organizational access, MFA should be combined with policy-based controls so that high-risk or sensitive access requires stronger verification. In a corporate support context, this external guidance supports the internal decision to require MFA for VPN, password recovery and cloud applications."
+        }
+      ]
+    }
+  },
+  {
+    "message": "Necesito acceso administrador a produccion por dos semanas",
+    "status": 200,
+    "expected_rag": true,
+    "response": {
+      "answer": "Para obtener acceso administrador a producción por dos semanas, necesitarás solicitarlo caso a caso y cumplir con los requisitos establecidos en la política de acceso a servidores. Debes registrar ventana de uso, motivo, plan de reversa y evidencia de cambio autorizado.\n\nAdemás, debes obtener aprobación del jefe directo, dueño del servicio y Seguridad TI.",
+      "used_rag": true,
+      "sources": [
+        {
+          "source": "matriz_accesos_por_cargo.md",
+          "tipo_fuente": "internal",
+          "categoria": "internal",
+          "seccion": "Produccion",
+          "fragment": "Matriz de Accesos por Cargo\nProduccion\nNingun cargo recibe acceso administrador permanente a produccion por defecto. El acceso productivo se solicita caso a caso segun minimo privilegio, aprobaciones y duracion documentada."
+        },
+        {
+          "source": "politica_acceso_servidores.md",
+          "tipo_fuente": "internal",
+          "categoria": "internal",
+          "seccion": "Ambientes productivos",
+          "fragment": "Politica de Acceso a Servidores\nAmbientes productivos\nLos accesos a produccion requieren aprobacion del jefe directo, dueno del servicio y Seguridad TI. Para privilegios administrativos se debe registrar ventana de uso, motivo, plan de reversa y evidencia de cambio autorizado."
+        }
+      ]
+    }
+  },
+  {
+    "message": "Necesito audifonos para trabajar desde casa",
+    "status": 200,
+    "expected_rag": true,
+    "response": {
+      "answer": "No hay información suficiente para determinar si los audífonos son necesarios para trabajar desde casa. Sin embargo, según el procedimiento de nuevo ingreso, se asigna equipamiento según cargo y modalidad, por lo que es posible que se puedan asignar audífonos específicos para trabajo remoto.",
+      "used_rag": true,
+      "sources": [
+        {
+          "source": "catalogo_equipamiento_ti.md",
+          "tipo_fuente": "internal",
+          "categoria": "internal",
+          "seccion": "Trabajo remoto",
+          "fragment": "Catalogo de Equipamiento TI\nTrabajo remoto\nPara trabajo remoto se valida despacho, VPN, MFA, cliente de colaboracion y soporte de red domestica limitado a diagnostico basico."
+        },
+        {
+          "source": "procedimiento_nuevo_ingreso.md",
+          "tipo_fuente": "internal",
+          "categoria": "internal",
+          "seccion": "Equipamiento",
+          "fragment": "Procedimiento de Nuevo Ingreso\nEquipamiento\nEl equipamiento se asigna segun cargo y modalidad. Para ingreso presencial se prepara notebook, cargador y perifericos estandar. Para trabajo remoto se valida despacho, VPN y herramienta de colaboracion."
+        }
+      ]
+    }
+  }
+]

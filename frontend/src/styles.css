@@ -1,0 +1,29 @@
+:root { color: #17201d; background: #f4f6f5; font-family: system-ui, sans-serif; font-synthesis: none; }
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 320px; }
+button, input { font: inherit; }
+button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 40px; padding: 0 12px; color: #17201d; background: white; border: 1px solid #ccd6d2; border-radius: 6px; cursor: pointer; }
+button:hover:not(:disabled) { background: #eaf3ef; }
+button:disabled { opacity: .55; cursor: not-allowed; }
+.app-layout { min-height: 100dvh; display: flex; flex-direction: column; }
+.topbar { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 16px 24px; background: white; border-bottom: 1px solid #dfe6e3; }
+.topbar h1 { margin: 0; font-size: 22px; letter-spacing: 0; }
+.topbar-actions { display: flex; align-items: center; gap: 12px; }
+.workspace { width: 100%; max-width: 1040px; margin: 0 auto; padding: 20px; flex: 1; display: flex; }
+.chat-shell { width: 100%; display: flex; flex-direction: column; min-width: 0; }
+.message-list { flex: 1; padding: 12px 0; }
+.empty-state { min-height: 50vh; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #4f625b; }
+.empty-state h2 { font-size: 22px; }
+.message { max-width: 860px; margin-bottom: 20px; padding: 14px 16px; overflow-wrap: anywhere; }
+.message.user { margin-left: auto; background: #e8f1fc; border-radius: 8px; }
+.message.assistant { border-bottom: 1px solid #dfe6e3; }
+.message-author { font-size: 12px; text-transform: uppercase; color: #65736f; font-weight: 700; margin-bottom: 8px; }
+.message p { margin: 0; line-height: 1.55; white-space: pre-wrap; }
+.chat-input-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; padding: 14px 0; position: sticky; bottom: 0; background: #f4f6f5; }
+.chat-input-row input { min-width: 0; min-height: 44px; padding: 0 14px; border: 1px solid #cdd8d4; border-radius: 6px; }
+.sources { margin-top: 14px; }
+.source-list { margin-top: 12px; display: grid; gap: 12px; }
+.source-item { padding: 10px 0; border-top: 1px solid #dfe6e3; }
+.source-meta { font-size: 13px; color: #52635d; margin: 6px 0; }
+.error { color: #9a2525; padding: 12px 24px; overflow-wrap: anywhere; }
+@media (max-width: 640px) { .topbar { align-items: flex-start; padding: 14px; flex-wrap: wrap; } .workspace { padding: 12px; } .message { padding: 12px 8px; } }

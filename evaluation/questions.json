@@ -1,0 +1,54 @@
+[
+  {
+    "question": "Como solicito acceso a SAP?",
+    "expected_source": "procedimiento_acceso_sap.md"
+  },
+  {
+    "question": "Cuanto demora un acceso SAP estandar?",
+    "expected_source": "procedimiento_acceso_sap.md"
+  },
+  {
+    "question": "Que hago si olvide mi contrasena?",
+    "expected_source": "politica_passwords.md"
+  },
+  {
+    "question": "La cuenta queda bloqueada despues de varios intentos fallidos?",
+    "expected_source": "politica_passwords.md"
+  },
+  {
+    "question": "Como conecto la VPN corporativa?",
+    "expected_source": "manual_vpn.md"
+  },
+  {
+    "question": "Como recupero MFA si cambie de telefono?",
+    "expected_source": "procedimiento_mfa.md"
+  },
+  {
+    "question": "Que recomienda Microsoft para proteger cuentas con MFA?",
+    "expected_source": "microsoft_entra_mfa_overview.md"
+  },
+  {
+    "question": "Que es Conditional Access segun Microsoft?",
+    "expected_source": "microsoft_conditional_access_overview.md"
+  },
+  {
+    "question": "Cuales son los canales oficiales de Mesa de Ayuda?",
+    "expected_source": "catalogo_servicios_ti.md"
+  },
+  {
+    "question": "Necesito acceso al servidor de pagos en produccion.",
+    "expected_source": "politica_acceso_servidores.md"
+  },
+  {
+    "question": "El lunes entra Camila como analista contable.",
+    "expected_source": "procedimiento_nuevo_ingreso.md"
+  },
+  {
+    "question": "Denle a Juan los mismos permisos que Pedro.",
+    "expected_source": "politica_minimo_privilegio.md"
+  },
+  {
+    "question": "Necesito acceso administrador a produccion por dos semanas.",
+    "expected_source": "politica_acceso_servidores.md"
+  }
+]

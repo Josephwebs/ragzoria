@@ -1,0 +1,201 @@
+[
+  {
+    "id": "INC-2025-0101",
+    "category": "VPN",
+    "title": "VPN error gateway not reachable",
+    "symptoms": "Several users could not connect to GlobalProtect and saw gateway not reachable after ISP maintenance.",
+    "root_cause": "DNS cache retained an outdated gateway address.",
+    "resolution": "Flush DNS cache, restart GlobalProtect and validate portal vpn.ragzor.local.",
+    "related_systems": ["VPN", "GlobalProtect", "DNS"],
+    "status": "closed",
+    "priority": "high"
+  },
+  {
+    "id": "INC-2025-0107",
+    "category": "SAP",
+    "title": "SAP user missing display role",
+    "symptoms": "User could log in to SAP but could not display purchase orders.",
+    "root_cause": "Display role MM_VIEWER was not assigned after approval.",
+    "resolution": "Assign approved role and ask user to restart SAP session.",
+    "related_systems": ["SAP"],
+    "status": "closed",
+    "priority": "medium"
+  },
+  {
+    "id": "INC-2025-0112",
+    "category": "Identity",
+    "title": "Password reset blocked by unavailable MFA",
+    "symptoms": "User forgot password and could not approve MFA because the phone was replaced.",
+    "root_cause": "Old authenticator device remained registered.",
+    "resolution": "Validate identity, remove old MFA method and trigger new registration.",
+    "related_systems": ["MFA", "Password"],
+    "status": "closed",
+    "priority": "medium"
+  },
+  {
+    "id": "INC-2025-0120",
+    "category": "VPN",
+    "title": "VPN MFA required loop",
+    "symptoms": "VPN repeatedly requested MFA and did not complete connection.",
+    "root_cause": "Authenticator push notifications were disabled on the mobile device.",
+    "resolution": "Enable notifications, remove stale login attempts and reconnect.",
+    "related_systems": ["VPN", "MFA"],
+    "status": "closed",
+    "priority": "medium"
+  },
+  {
+    "id": "INC-2025-0133",
+    "category": "Microsoft 365",
+    "title": "User cannot access Teams after password change",
+    "symptoms": "Teams desktop client kept requesting credentials after password reset.",
+    "root_cause": "Cached credentials in Windows Credential Manager.",
+    "resolution": "Remove cached Office credentials and sign in again.",
+    "related_systems": ["Microsoft 365", "Teams", "Password"],
+    "status": "closed",
+    "priority": "low"
+  },
+  {
+    "id": "INC-2025-0141",
+    "category": "SAP",
+    "title": "SAP account locked after failed attempts",
+    "symptoms": "User reported SAP login blocked after multiple attempts.",
+    "root_cause": "Incorrect saved password in SAP GUI.",
+    "resolution": "Unlock SAP user, clear saved credential and confirm corporate password.",
+    "related_systems": ["SAP", "Password"],
+    "status": "closed",
+    "priority": "medium"
+  },
+  {
+    "id": "INC-2025-0148",
+    "category": "Applications",
+    "title": "Internal HR portal access denied",
+    "symptoms": "New collaborator could not open HR portal.",
+    "root_cause": "Onboarding ticket did not include HR_BASIC profile.",
+    "resolution": "Request manager approval and add HR_BASIC profile.",
+    "related_systems": ["HR Portal", "Access"],
+    "status": "closed",
+    "priority": "low"
+  },
+  {
+    "id": "INC-2025-0154",
+    "category": "VPN",
+    "title": "VPN disconnects every 10 minutes",
+    "symptoms": "Remote users disconnected regularly while connected through public Wi-Fi.",
+    "root_cause": "Unstable network and outdated VPN client.",
+    "resolution": "Upgrade GlobalProtect client and test from stable network.",
+    "related_systems": ["VPN", "GlobalProtect"],
+    "status": "closed",
+    "priority": "medium"
+  },
+  {
+    "id": "INC-2025-0162",
+    "category": "Cloud",
+    "title": "Azure portal requires additional verification",
+    "symptoms": "Administrator was asked for additional verification when opening Azure portal.",
+    "root_cause": "Conditional Access policy required MFA for privileged access.",
+    "resolution": "Confirm policy behavior and complete MFA with approved method.",
+    "related_systems": ["Azure", "MFA", "Conditional Access"],
+    "status": "closed",
+    "priority": "low"
+  },
+  {
+    "id": "INC-2025-0175",
+    "category": "Identity",
+    "title": "Account locked after repeated login failures",
+    "symptoms": "User account locked in the morning after failed attempts overnight.",
+    "root_cause": "Mobile mail client retained an old password.",
+    "resolution": "Update password on mobile mail client and monitor sign-in logs.",
+    "related_systems": ["Password", "Exchange"],
+    "status": "closed",
+    "priority": "medium"
+  },
+  {
+    "id": "INC-2025-0183",
+    "category": "SAP",
+    "title": "SAP role request pending approval",
+    "symptoms": "User asked why SAP access was not active after submitting a ticket.",
+    "root_cause": "Manager approval was missing.",
+    "resolution": "Notify manager and resume provisioning after approval.",
+    "related_systems": ["SAP", "Access"],
+    "status": "closed",
+    "priority": "low"
+  },
+  {
+    "id": "INC-2025-0192",
+    "category": "VPN",
+    "title": "Multiple VPN failures after certificate renewal",
+    "symptoms": "Users received certificate validation errors during VPN login.",
+    "root_cause": "Intermediate certificate was not installed on some laptops.",
+    "resolution": "Deploy certificate chain through device management and retry.",
+    "related_systems": ["VPN", "Certificates"],
+    "status": "closed",
+    "priority": "high"
+  },
+  {
+    "id": "INC-2025-0204",
+    "category": "Identity",
+    "title": "MFA registration not completed during onboarding",
+    "symptoms": "New employee could not access VPN on first remote day.",
+    "root_cause": "MFA setup task was skipped during induction.",
+    "resolution": "Guide user through MFA registration and validate VPN access.",
+    "related_systems": ["MFA", "VPN", "Onboarding"],
+    "status": "closed",
+    "priority": "medium"
+  },
+  {
+    "id": "INC-2025-0211",
+    "category": "Applications",
+    "title": "Finance app profile mismatch",
+    "symptoms": "Approver could view requests but not approve them.",
+    "root_cause": "Read-only profile assigned instead of approver profile.",
+    "resolution": "Correct profile after manager approval.",
+    "related_systems": ["Finance App", "Access"],
+    "status": "closed",
+    "priority": "medium"
+  },
+  {
+    "id": "INC-2025-0226",
+    "category": "Microsoft 365",
+    "title": "SharePoint access request missing owner approval",
+    "symptoms": "User could not access a department SharePoint site.",
+    "root_cause": "Site owner had not approved the access request.",
+    "resolution": "Route approval to site owner and grant group membership.",
+    "related_systems": ["SharePoint", "Access"],
+    "status": "closed",
+    "priority": "low"
+  },
+  {
+    "id": "INC-2025-0238",
+    "category": "VPN",
+    "title": "VPN slow after successful connection",
+    "symptoms": "User connected to VPN but internal applications loaded slowly.",
+    "root_cause": "Local network packet loss above acceptable threshold.",
+    "resolution": "Test wired connection and collect latency evidence before escalation.",
+    "related_systems": ["VPN", "Network"],
+    "status": "closed",
+    "priority": "low"
+  },
+  {
+    "id": "INC-2025-0249",
+    "category": "SAP",
+    "title": "SAP transaction unavailable for new role",
+    "symptoms": "User had SAP access but transaction ME23N was unavailable.",
+    "root_cause": "Requested profile did not include purchasing display transaction.",
+    "resolution": "Open role change request with justification and manager approval.",
+    "related_systems": ["SAP", "Access"],
+    "status": "closed",
+    "priority": "medium"
+  },
+  {
+    "id": "INC-2025-0260",
+    "category": "Identity",
+    "title": "Suspicious password reset attempts",
+    "symptoms": "User received unexpected password reset notifications.",
+    "root_cause": "External actor attempted account recovery.",
+    "resolution": "Reset password, review sign-in logs and require MFA revalidation.",
+    "related_systems": ["Password", "MFA", "Security"],
+    "status": "closed",
+    "priority": "high"
+  }
+]
+

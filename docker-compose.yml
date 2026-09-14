@@ -1,0 +1,26 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    environment:
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-llama3:latest}
+      EMBEDDING_MODEL: ${EMBEDDING_MODEL:-bge-m3}
+      OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-http://host.docker.internal:11434}
+      FAISS_PERSIST_DIR: /code/storage/faiss_simple
+      DATA_DIR: /code/data
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/code/data:ro
+      - ragzor_storage:/code/storage
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+volumes:
+  ragzor_storage:
