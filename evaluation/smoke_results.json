@@ -4,9 +4,17 @@
     "status": 200,
     "expected_rag": false,
     "response": {
-      "answer": "Hola! ¿En qué puedo ayudarte hoy?",
+      "answer": "Hola! ¿En qué puedo ayudarte?",
+      "thread_id": "ad23d5e2-12db-4f2b-a5c0-54b8fa223e70",
       "used_rag": false,
-      "sources": []
+      "plan": [
+        "Comprender el mensaje.",
+        "Responder brevemente."
+      ],
+      "sources": [],
+      "needs_confirmation": false,
+      "pending_action": null,
+      "activity": []
     }
   },
   {
@@ -14,8 +22,14 @@
     "status": 200,
     "expected_rag": true,
     "response": {
-      "answer": "Para obtener acceso al servidor de producción, necesitas aprobación del jefe directo, dueño del servicio y Seguridad TI. Además, debes registrar la ventana de uso, motivo, plan de reversa y evidencia de cambio autorizado.",
+      "answer": "Entiendo que para obtener acceso al servidor de producción, se requiere aprobación del jefe directo, dueño del servicio y Seguridad TI. Además, para privilegios administrativos, se debe registrar ventana de uso, motivo, plan de reversa y evidencia de cambio autorizado. ¿Puedes proporcionarme más información sobre el tipo de acceso que necesitas y los permisos que requieres?",
+      "thread_id": "46dc87af-459b-4f11-9577-d6fba83eb288",
       "used_rag": true,
+      "plan": [
+        "Consultar la documentación de acceso al servidor de producción para comprender los requisitos y procedimientos",
+        "Revisar los datos faltantes para determinar el tipo de acceso requerido y los permisos necesarios",
+        "Revisar la historia de solicitudes y tickets relacionados con acceso al servidor de producción en la base de datos SQLite para obtener información adicional"
+      ],
       "sources": [
         {
           "source": "politica_acceso_servidores.md",
@@ -31,6 +45,11 @@
           "seccion": "Produccion",
           "fragment": "Matriz de Accesos por Cargo\nProduccion\nNingun cargo recibe acceso administrador permanente a produccion por defecto. El acceso productivo se solicita caso a caso segun minimo privilegio, aprobaciones y duracion documentada."
         }
+      ],
+      "needs_confirmation": false,
+      "pending_action": null,
+      "activity": [
+        "Consulto documentacion."
       ]
     }
   },
@@ -39,8 +58,14 @@
     "status": 200,
     "expected_rag": true,
     "response": {
-      "answer": "Para obtener acceso solo de lectura hasta el viernes al servidor de producción, necesitas aprobación del jefe directo, dueño del servicio y Seguridad TI. Debes registrar la ventana de uso, motivo y plan de reversa. No hay información suficiente sobre la duración documentada, por lo que no puedo confirmar si se requiere evidencia de cambio autorizado.",
+      "answer": "¿Cuál es el cargo o rol que te corresponde para solicitar acceso a producción y qué tipo de lectura necesitas hasta el viernes?",
+      "thread_id": "46dc87af-459b-4f11-9577-d6fba83eb288",
       "used_rag": true,
+      "plan": [
+        "Revisar la documentación de políticas de acceso a servidores para comprender los requisitos para obtener acceso a producción.",
+        "Consultar la matriz de accesos por cargo para determinar el tipo de acceso y permisos necesarios para lectura hasta el viernes.",
+        "Revisar datos faltantes para confirmar la solicitud y obtener aprobación del jefe directo, dueño del servicio y Seguridad TI."
+      ],
       "sources": [
         {
           "source": "politica_acceso_servidores.md",
@@ -56,6 +81,11 @@
           "seccion": "Produccion",
           "fragment": "Matriz de Accesos por Cargo\nProduccion\nNingun cargo recibe acceso administrador permanente a produccion por defecto. El acceso productivo se solicita caso a caso segun minimo privilegio, aprobaciones y duracion documentada."
         }
+      ],
+      "needs_confirmation": false,
+      "pending_action": null,
+      "activity": [
+        "Solicito informacion adicional."
       ]
     }
   },
@@ -64,8 +94,13 @@
     "status": 200,
     "expected_rag": true,
     "response": {
-      "answer": "Camila, como analista contable, tiene acceso a correo corporativo, Microsoft 365, MFA, acceso a carpetas del área Finanzas y SAP con perfil de consulta o contabilización según sea aprobado. Además, puede recibir un notebook estandar con Microsoft 365 y aplicaciones financieras aprobadas por la matriz de accesos.",
+      "answer": "Hola! Entiendo que Camila va a entrar como analista contable el lunes. Según la documentación, parece que necesitará un notebook estandar, Microsoft 365, acceso a impresora del área y MFA. ¿Puedes proporcionarme el número de identificación y el tipo de contrato de Camila para poder procesar su entrada en el sistema?",
+      "thread_id": "1b9f3420-a683-497b-8550-5a72f3bcf8b5",
       "used_rag": true,
+      "plan": [
+        "Consultar la documentación de la empresa para obtener información sobre el proceso de entrada de nuevos empleados y la forma en que se manejan los datos de personal.",
+        "Revisar los datos faltantes sobre Camila, como su número de identificación y su tipo de contrato, para poder procesar su entrada en el sistema."
+      ],
       "sources": [
         {
           "source": "matriz_accesos_por_cargo.md",
@@ -81,6 +116,11 @@
           "seccion": "Perfil contable",
           "fragment": "Catalogo de Equipamiento TI\nPerfil contable\nPara cargos contables se prepara notebook estandar, Microsoft 365, acceso a impresora del area cuando aplique, MFA y aplicaciones financieras aprobadas por la matriz de accesos."
         }
+      ],
+      "needs_confirmation": false,
+      "pending_action": null,
+      "activity": [
+        "Consulto documentacion."
       ]
     }
   },
@@ -89,8 +129,15 @@
     "status": 200,
     "expected_rag": true,
     "response": {
-      "answer": "No hay información suficiente para aprobar accesos. Es necesario identificar el cargo, tarea, sistema, permiso específico, duración y aprobador correspondiente.",
+      "answer": "Entiendo que deseas asignar los mismos permisos que Pedro a Juan. Sin embargo, es importante considerar la política de minimo privilegio y la duración de los accesos temporales. ¿Puedes proporcionarme más información sobre el cargo y tarea de Juan, así como el sistema y permiso específico que deseas asignar?",
+      "thread_id": "38971505-76ec-4ab6-aae3-7ddc01de41f4",
       "used_rag": true,
+      "plan": [
+        "Consultar la documentación para entender los permisos y roles existentes",
+        "Revisar los datos faltantes sobre Juan y Pedro para determinar qué permisos se les han asignado actualmente",
+        "Comparar los permisos de Pedro con los permisos que se desean asignar a Juan para determinar la diferencia",
+        "Preparar la solicitud para confirmación humana con la información necesaria para tomar una decisión informada"
+      ],
       "sources": [
         {
           "source": "politica_minimo_privilegio.md",
@@ -106,6 +153,11 @@
           "seccion": "Duracion",
           "fragment": "Politica de Acceso a Servidores\nDuracion\nLos accesos temporales deben tener fecha de termino. Los permisos de solo lectura pueden aprobarse por periodos acotados si existe justificacion. Los permisos administrativos en produccion no deben quedar permanentes y se revisan al cierre del ticket."
         }
+      ],
+      "needs_confirmation": false,
+      "pending_action": null,
+      "activity": [
+        "Consulto documentacion."
       ]
     }
   },
@@ -114,8 +166,15 @@
     "status": 200,
     "expected_rag": true,
     "response": {
-      "answer": "No hay información suficiente en el contexto proporcionado sobre políticas internas para comprar computadoras cuánticas. La información disponible se refiere a Microsoft Entra Conditional Access y MFA, no a la compra de computadoras cuánticas.",
+      "answer": "La política interna para comprar computadoras cuánticas no se encuentra en la documentación oficial de Ragzor. Sin embargo, se sugiere que se requiere multifactor authentication (MFA) para acceso a VPN, recuperación de contraseñas y aplicaciones en la nube. Es importante revisar la documentación de la empresa sobre la gestión de la propiedad y el mantenimiento de computadoras cuánticas para obtener más información.",
+      "thread_id": "65d69290-0d8e-4324-80ff-a888e0c87377",
       "used_rag": true,
+      "plan": [
+        "Consultar la documentación oficial de Ragzor sobre la política de compra de computadoras cuánticas",
+        "Revisar los datos faltantes sobre los requisitos y restricciones para la adquisición de computadoras cuánticas",
+        "Verificar la disponibilidad y el presupuesto asignado para la compra de computadoras cuánticas",
+        "Revisar la documentación de la empresa sobre la gestión de la propiedad y el mantenimiento de computadoras cuánticas"
+      ],
       "sources": [
         {
           "source": "microsoft_conditional_access_overview.md",
@@ -131,6 +190,11 @@
           "seccion": "Recommended use",
           "fragment": "Microsoft Entra MFA Overview\nRecommended use\nFor organizational access, MFA should be combined with policy-based controls so that high-risk or sensitive access requires stronger verification. In a corporate support context, this external guidance supports the internal decision to require MFA for VPN, password recovery and cloud applications."
         }
+      ],
+      "needs_confirmation": false,
+      "pending_action": null,
+      "activity": [
+        "Consulto documentacion."
       ]
     }
   },
@@ -139,8 +203,15 @@
     "status": 200,
     "expected_rag": true,
     "response": {
-      "answer": "Para obtener acceso administrador a producción por dos semanas, necesitarás solicitarlo caso a caso y cumplir con los requisitos establecidos en la política de acceso a servidores. Debes registrar ventana de uso, motivo, plan de reversa y evidencia de cambio autorizado.\n\nAdemás, debes obtener aprobación del jefe directo, dueño del servicio y Seguridad TI.",
+      "answer": "¿Puede proporcionar la justificación para el acceso administrador y la ventana de uso prevista para estas dos semanas?",
+      "thread_id": "c543a0fe-63ba-4d29-a867-1dc8fda04a87",
       "used_rag": true,
+      "plan": [
+        "Consultar la documentación de acceso administrador a producción para entender los requisitos y procedimientos",
+        "Revisar datos faltantes sobre la cuenta del usuario y la justificación para el acceso administrador",
+        "Verificar la disponibilidad de un ticket de soporte o solicitud previa para este tipo de acceso",
+        "Preparar la solicitud para confirmación humana con los datos y justificación necesarios"
+      ],
       "sources": [
         {
           "source": "matriz_accesos_por_cargo.md",
@@ -156,6 +227,12 @@
           "seccion": "Ambientes productivos",
           "fragment": "Politica de Acceso a Servidores\nAmbientes productivos\nLos accesos a produccion requieren aprobacion del jefe directo, dueno del servicio y Seguridad TI. Para privilegios administrativos se debe registrar ventana de uso, motivo, plan de reversa y evidencia de cambio autorizado."
         }
+      ],
+      "needs_confirmation": false,
+      "pending_action": null,
+      "activity": [
+        "Consulto documentacion.",
+        "Solicito informacion adicional."
       ]
     }
   },
@@ -164,8 +241,14 @@
     "status": 200,
     "expected_rag": true,
     "response": {
-      "answer": "No hay información suficiente para determinar si los audífonos son necesarios para trabajar desde casa. Sin embargo, según el procedimiento de nuevo ingreso, se asigna equipamiento según cargo y modalidad, por lo que es posible que se puedan asignar audífonos específicos para trabajo remoto.",
+      "answer": "Entiendo que necesitas audífonos para trabajar desde casa. ¿Cuál es el cargo o modalidad que te permite trabajar de esta manera?",
+      "thread_id": "1370df13-fd99-4cf6-8372-1b423226dfd3",
       "used_rag": true,
+      "plan": [
+        "Consultar la documentación de la empresa sobre el uso de audífonos para trabajar desde casa",
+        "Revisar los datos faltantes sobre la disponibilidad de audífonos en la empresa y los requisitos para su uso",
+        "Contactar con el equipo de TI para obtener más información sobre la configuración y uso de los audífonos"
+      ],
       "sources": [
         {
           "source": "catalogo_equipamiento_ti.md",
@@ -181,6 +264,11 @@
           "seccion": "Equipamiento",
           "fragment": "Procedimiento de Nuevo Ingreso\nEquipamiento\nEl equipamiento se asigna segun cargo y modalidad. Para ingreso presencial se prepara notebook, cargador y perifericos estandar. Para trabajo remoto se valida despacho, VPN y herramienta de colaboracion."
         }
+      ],
+      "needs_confirmation": false,
+      "pending_action": null,
+      "activity": [
+        "Consulto documentacion."
       ]
     }
   }

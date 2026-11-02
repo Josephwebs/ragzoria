@@ -22,8 +22,21 @@ button:disabled { opacity: .55; cursor: not-allowed; }
 .chat-input-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; padding: 14px 0; position: sticky; bottom: 0; background: #f4f6f5; }
 .chat-input-row input { min-width: 0; min-height: 44px; padding: 0 14px; border: 1px solid #cdd8d4; border-radius: 6px; }
 .sources { margin-top: 14px; }
+.plan, .activity { margin-top: 12px; color: #40534c; }
+.plan summary, .activity summary, .sources summary { cursor: pointer; font-weight: 650; }
+.plan ol, .activity ul { margin: 10px 0 0; padding-left: 22px; line-height: 1.5; }
+.confirmation-actions { display: flex; gap: 10px; margin-top: 14px; }
+.pending-card { display: grid; gap: 8px; margin-top: 14px; padding: 14px; background: #f5faf8; border: 1px solid #bfd5cc; border-radius: 6px; }
+.pending-card p { color: #40534c; }
+.pending-card small { color: #65736f; }
+.confirmation-actions button:first-child { color: white; background: #176b4d; border-color: #176b4d; }
+.confirmation-actions button:first-child:hover:not(:disabled) { background: #12563e; }
 .source-list { margin-top: 12px; display: grid; gap: 12px; }
 .source-item { padding: 10px 0; border-top: 1px solid #dfe6e3; }
 .source-meta { font-size: 13px; color: #52635d; margin: 6px 0; }
 .error { color: #9a2525; padding: 12px 24px; overflow-wrap: anywhere; }
 @media (max-width: 640px) { .topbar { align-items: flex-start; padding: 14px; flex-wrap: wrap; } .workspace { padding: 12px; } .message { padding: 12px 8px; } }
+.tools-used {
+  font-size: 0.82rem;
+  color: #64748b;
+}

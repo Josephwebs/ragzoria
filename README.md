@@ -1,312 +1,191 @@
 # Ragzor Assistant
 
-Ragzor Assistant es un asistente conversacional para Mesa de Ayuda TI. Permite
-analizar solicitudes de usuarios y responder usando informacion recuperada desde
-documentos locales mediante RAG.
+Ragzor es un asistente de Mesa de Ayuda TI. La EP1 respondia con un LLM y RAG;
+la EP2 conserva ese trabajo y lo convierte en **un unico agente** capaz de
+planificar, elegir tools, observar resultados, recordar contexto y solicitar
+confirmacion antes de escribir un ticket.
 
-El proyecto usa un LLM local con Ollama, embeddings locales, FAISS como vector
-store, FastAPI como backend y React como frontend.
+## Evolucion EP1 → EP2
 
-## Que hace
+| Etapa | Capacidades |
+|---|---|
+| Ragzor EP1 | React + FastAPI + Ollama + RAG (bge-m3, FAISS, top 2 chunks) |
+| Ragzor EP2 | EP1 + LangGraph + planner + 3 tools + memoria corta/larga + confirmacion humana |
 
-- Responde saludos y conversacion simple sin consultar documentos.
-- Detecta cuando una solicitud necesita informacion documental.
-- Recupera evidencia desde documentos locales.
-- Responde usando contexto recuperado.
-- Muestra evidencia en un panel plegable.
-- Mantiene historial corto de conversacion para entender seguimientos.
-
-Ejemplo:
-
-```text
-Usuario: Necesito acceso administrador a produccion por dos semanas.
-Ragzor: responde con requisitos, riesgos o datos faltantes segun documentos recuperados.
-```
-
-## Enfoque del asistente
-
-Ragzor funciona como asistente conversacional con LLM + RAG. El modelo interpreta
-el mensaje, considera el historial reciente y decide si corresponde responder
-como conversacion normal (`CHAT`) o consultar documentos mediante recuperacion
-documental (`RAG`).
-
-El foco del proyecto es analizar solicitudes de Mesa de Ayuda, recuperar
-evidencia relevante y entregar respuestas breves apoyadas en documentos.
+No se reemplazo el RAG: ahora esta encapsulado en `buscar_documentacion` y el
+agente decide cuando usarlo.
 
 ## Arquitectura
 
-```text
-React
-  |
-  | POST /api/chat
-  v
-FastAPI
-  |
-  | decide CHAT o RAG con Ollama
-  v
-Ollama llama3
-  |
-  | si requiere RAG
-  v
-FAISS + embeddings bge-m3
-  |
-  | recupera top 2 chunks
-  v
-Ollama llama3 genera respuesta final
+```mermaid
+flowchart TD
+    UI[React: chat, evidencia y plan] --> API[FastAPI POST /api/chat]
+    API --> P[planner: plan Pydantic de 2 a 4 pasos]
+    P --> A[agent]
+    A -->|necesita informacion externa| T[ToolNode]
+    T -->|observacion| A
+    A -->|faltan datos| Q[Pregunta al usuario]
+    A -->|respuesta suficiente| R[Respuesta final]
+    A -->|quiere escribir| C[Solicita confirmacion]
+    C --> PA[(pending_actions)]
+    PA -->|Confirmar usuario y thread| CT[crear_ticket]
+    C -->|Cancelar| R
+    CT --> DB[(tickets y memory)]
+    DB --> A
 ```
 
-Componentes:
+Flujo principal: `React → FastAPI → LangGraph → planner → agent → tool → agent`.
 
-- Frontend: React + TypeScript.
-- Backend: FastAPI.
-- LLM: Ollama con `llama3:latest`.
-- Embeddings: Ollama con `bge-m3`.
-- Vector store: FAISS.
-- Contratos de API: Pydantic.
-- Fuentes: archivos Markdown/TXT en `data/internal` y `data/external`.
+## Las tres tools
 
-## Requisitos
+1. `buscar_documentacion(query)`: reutiliza bge-m3, FAISS y el retriever EP1;
+   devuelve los dos chunks mas cercanos y metadata para "Ver evidencia".
+2. `consultar_ticket(ticket_id, user_id)`: consulta SQLite sin modificar datos.
+3. `crear_ticket(action_id, thread_id, user_id)`: consume una propuesta
+   persistida y crea como maximo un ticket. No recibe resumen ni detalles desde
+   el LLM durante la confirmacion.
 
-Antes de ejecutar el proyecto, instalar:
+## Memoria y seguridad
 
-- Python 3.11 o superior.
-- Node.js 18 o superior.
-- Ollama.
-- Git.
+- **Corto plazo:** `MemorySaver` conserva mensajes por la clave compuesta
+  `user_id:thread_id`; no persiste tras reiniciar el backend.
+- **Largo plazo:** `memory` mantiene el ultimo ticket y resumen; `tickets`
+  conserva varias solicitudes y permite listarlas sin confundir IDs.
+- **Recuperacion semantica:** corresponde al corpus documental FAISS con
+  `bge-m3`; consultar tickets SQLite no se presenta como memoria semantica.
+- **Confirmacion:** `pending_actions` guarda una propuesta inmutable con UUID,
+  propietario, thread, estado y expiracion. Confirmar la consume dentro de la
+  misma transaccion que crea el ticket; los reintentos devuelven el mismo ID.
+- **Replanificacion:** el planner se ejecuta en cada turno, compara el plan
+  anterior y registra el cambio en `activity`. Un cambio de objetivo habilita
+  una nueva consulta documental.
 
-Ollama debe estar ejecutandose localmente en:
+El LLM sigue siendo `llama3:latest`. Como el cliente Ollama original no expone
+tool calling nativo, planner y agente devuelven JSON validado con Pydantic;
+LangGraph convierte la accion validada en llamadas reales de `ToolNode`. No se
+muestra razonamiento interno.
 
-```text
-http://localhost:11434
-```
+## Requisitos e instalacion
 
-## Instalacion
-
-Clonar el repositorio:
-
-```bash
-git clone https://github.com/Josephwebs/ragzoria.git
-cd ragzoria
-```
-
-Crear entorno Python e instalar dependencias:
+- Python 3.11+
+- Node.js 18+
+- Ollama
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r backend/requirements.txt
-```
-
-Instalar dependencias del frontend:
-
-```bash
 npm --prefix frontend install
-```
-
-Crear archivo de variables de entorno:
-
-```bash
 cp .env.example .env
-```
-
-Descargar modelos de Ollama:
-
-```bash
 ollama pull llama3
 ollama pull bge-m3
 ```
 
-Si Ollama no esta corriendo:
+## Preparar datos
+
+Crear o actualizar el indice documental FAISS:
 
 ```bash
-ollama serve
-```
-
-## Indexar documentos
-
-Antes de usar el chat con RAG, crear el indice FAISS:
-
-```bash
-source .venv/bin/activate
 python scripts/ingest.py
 ```
 
-Este comando lee documentos desde:
-
-```text
-data/internal
-data/external
-```
-
-Luego los divide en chunks, genera embeddings con `bge-m3` y guarda el indice en:
-
-```text
-backend/storage/faiss_simple
-```
-
-Si se modifican documentos o se cambia el modelo de embeddings, ejecutar este
-comando nuevamente.
-
-## Ejecutar backend
-
-En una terminal:
+Crear `ragzor.db` y tickets sinteticos para la demostracion:
 
 ```bash
-source .venv/bin/activate
+python scripts/seed_database.py
+```
+
+SQLite crea `tickets`, `memory` y la tabla de control `pending_actions`.
+El esquema se crea de forma compatible con bases existentes.
+
+## Ejecutar
+
+Terminal 1:
+
+```bash
+ollama serve
 uvicorn app.main:app --app-dir backend --reload --host 127.0.0.1 --port 8000
 ```
 
-La API queda disponible en:
-
-```text
-http://127.0.0.1:8000
-```
-
-Health check:
-
-```text
-http://127.0.0.1:8000/api/health
-```
-
-## Ejecutar frontend
-
-En otra terminal:
+Terminal 2:
 
 ```bash
 npm --prefix frontend run dev
 ```
 
-Abrir en navegador:
+Abrir `http://127.0.0.1:5173`. Tambien se puede usar `docker compose up --build`.
 
-```text
-http://127.0.0.1:5173
-```
+## API
 
-Si Vite usa otro puerto, abrir el puerto indicado en la terminal.
-
-## Variables principales
-
-El archivo `.env.example` contiene valores por defecto:
-
-```env
-OLLAMA_MODEL=llama3:latest
-EMBEDDING_MODEL=bge-m3
-OLLAMA_BASE_URL=http://localhost:11434
-TOP_K=2
-CHUNK_SIZE=350
-CHUNK_OVERLAP=50
-RAG_DEBUG=false
-```
-
-Significado:
-
-- `OLLAMA_MODEL`: modelo usado para clasificar y responder.
-- `EMBEDDING_MODEL`: modelo usado para generar vectores.
-- `OLLAMA_BASE_URL`: URL local de Ollama.
-- `TOP_K`: cantidad de chunks recuperados por consulta.
-- `CHUNK_SIZE`: tamano de cada fragmento.
-- `CHUNK_OVERLAP`: solapamiento entre fragmentos.
-- `RAG_DEBUG`: si es `true`, imprime en terminal decision, query, chunks y prompt RAG.
-
-## API principal
-
-Endpoint:
-
-```text
-POST /api/chat
-```
-
-Ejemplo de entrada:
+`POST /api/chat`
 
 ```json
 {
-  "message": "Necesito acceso al servidor de pagos en produccion",
-  "history": []
+  "message": "Necesito acceso administrador a produccion por dos semanas",
+  "thread_id": "demo-thread-1",
+  "user_id": "ana"
 }
 ```
 
-Ejemplo de salida:
+Respuesta resumida:
 
 ```json
 {
-  "answer": "Para procesar la solicitud necesito el usuario, servidor exacto, nivel de permiso y duracion.",
-  "used_rag": true,
-  "sources": [
-    {
-      "source": "politica_acceso_servidores.md",
-      "tipo_fuente": "internal",
-      "categoria": "internal",
-      "seccion": "Accesos privilegiados",
-      "fragment": "..."
-    }
-  ]
+  "answer": "¿Cual es el servidor exacto y la justificacion?",
+  "thread_id": "demo-thread-1",
+  "plan": ["Consultar politicas.", "Revisar datos faltantes."],
+  "sources": [],
+  "needs_confirmation": false,
+  "pending_action": null,
+  "activity": ["Consulto documentacion."]
 }
 ```
 
-## Archivos importantes
+Para confirmar, el mismo thread envia:
 
-- `backend/app/main.py`: crea la aplicacion FastAPI.
-- `backend/app/api/chat.py`: define `POST /api/chat`.
-- `backend/app/rag/chat.py`: coordina decision CHAT/RAG, retrieval y respuesta.
-- `backend/app/llm/ollama.py`: comunica el backend con Ollama.
-- `backend/app/embeddings/provider.py`: genera embeddings con Ollama.
-- `backend/app/retrievers/faiss_retriever.py`: consulta el indice FAISS.
-- `backend/app/rag/ingestion.py`: crea el indice FAISS.
-- `backend/app/prompts.py`: prompts del asistente.
-- `frontend/src/App.tsx`: estado principal del chat.
-- `frontend/src/components/SourcesPanel.tsx`: evidencia recuperada.
-- `docs/proyecto.md`: explicacion tecnica del proyecto.
+```json
+{
+  "message": "Confirmar ticket",
+  "thread_id": "demo-thread-1",
+  "user_id": "ana",
+  "confirmation": "confirm"
+}
+```
+
+## Estado LangGraph
+
+El estado se mantiene pequeño: `messages`, `user_id`, `plan`, `sources`,
+`pending_action`, `final_answer`, `activity`, `confirmation` y el siguiente paso
+interno. Los mensajes usan el reducer oficial `add_messages`.
+
+## Archivos principales
+
+- `backend/app/agent/graph.py`: StateGraph, nodos, edges y MemorySaver.
+- `backend/app/agent/state.py`: estado y salidas Pydantic.
+- `backend/app/agent/tools.py`: las tres tools.
+- `backend/app/agent/memory.py`: SQLite para tickets y memoria persistente.
+- `backend/app/retrievers/faiss_retriever.py`: retriever EP1 reutilizado.
+- `frontend/src/components/ChatWindow.tsx`: evidencia, plan y confirmacion.
+- `docs/ep2_agente.md`: guia tecnica para estudiar y presentar.
 
 ## Pruebas
 
-Ejecutar pruebas unitarias:
-
 ```bash
 pytest -q
-```
-
-Construir frontend:
-
-```bash
 npm --prefix frontend run build
+python scripts/evaluate_rag.py       # requiere Ollama e indice
+python scripts/smoke_chat.py         # requiere Ollama e indice
 ```
 
-Evaluar retrieval:
+La suite cubre grafo, RAG, memoria corta, aislamiento por usuario,
+replanificacion, propiedad de tickets, varias solicitudes, confirmacion,
+cancelacion, expiracion, reemplazo e idempotencia.
 
-```bash
-python scripts/evaluate_rag.py
-```
+## Limitaciones
 
-Probar chat real con Ollama:
-
-```bash
-python scripts/smoke_chat.py
-```
-
-Notas:
-
-- `evaluate_rag.py` y `smoke_chat.py` requieren Ollama activo e indice FAISS creado.
-- Las pruebas unitarias usan dobles del modelo para validar comportamiento tecnico.
-- La evidencia recuperada ayuda a revisar la respuesta, pero no reemplaza revision humana.
-
-## Docker opcional
-
-Tambien se puede ejecutar con Docker:
-
-```bash
-docker compose up --build
-```
-
-Ollama debe estar corriendo en el host. Para crear el indice dentro del contenedor:
-
-```bash
-docker compose exec backend python -c "from app.rag.ingestion import ingest_all; print(ingest_all())"
-```
-
-## Documentacion
-
-Para mas detalle tecnico, revisar:
-
-```text
-docs/proyecto.md
-```
+- `user_id` llega desde el cliente para la demostracion: separa datos, pero no
+  reemplaza autenticacion ni autorizacion corporativa.
+- `MemorySaver` es volatil y solo sirve durante la vida del proceso.
+- Ollama y el indice FAISS deben estar disponibles para las pruebas reales.
+- La memoria persistente de solicitudes es relacional, no una segunda memoria
+  vectorial. Se evito agregar infraestructura que no aporta a la EP2.

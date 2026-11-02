@@ -1,6 +1,7 @@
 """Run real Ollama cases and save inspectable results; not a semantic quality judge."""
 import json
 import sys
+from uuid import uuid4
 from pathlib import Path
 from fastapi.testclient import TestClient
 
@@ -11,7 +12,6 @@ from app.main import app
 
 def main():
     client = TestClient(app)
-    history = []
     results = []
     cases = [
         ("hola", False, False),
@@ -23,17 +23,18 @@ def main():
         ("Necesito acceso administrador a produccion por dos semanas", True, False),
         ("Necesito audifonos para trabajar desde casa", True, False),
     ]
+    thread_id = str(uuid4())
     for message, expected, follow_up in cases:
-        prior = history if follow_up else []
-        response = client.post("/api/chat", json={"message": message, "history": prior[-6:]})
+        if not follow_up:
+            thread_id = str(uuid4())
+        response = client.post("/api/chat", json={
+            "message": message, "thread_id": thread_id, "user_id": "smoke-user"
+        })
         payload = response.json()
         result = {"message": message, "status": response.status_code,
                   "expected_rag": expected, "response": payload}
         results.append(result)
         print(json.dumps(result, ensure_ascii=False), flush=True)
-        if response.status_code == 200:
-            history = prior + [{"role": "user", "content": message},
-                               {"role": "assistant", "content": payload["answer"]}]
     output = ROOT / "evaluation/smoke_results.json"
     output.write_text(json.dumps(results, ensure_ascii=False, indent=2) + "\n")
     assert all(r["status"] == 200 and r["response"]["used_rag"] == r["expected_rag"]

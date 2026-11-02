@@ -11,6 +11,8 @@ class Settings(BaseSettings):
     ollama_timeout: int = 120
     data_dir: Path = PROJECT_ROOT / "data"
     faiss_persist_dir: Path = PROJECT_ROOT / "backend/storage/faiss_simple"
+    database_path: Path = PROJECT_ROOT / "backend/storage/ragzor.db"
+    pending_action_ttl_minutes: int = Field(default=15, ge=1, le=1440)
     top_k: int = Field(default=2, ge=1, le=10)
     chunk_size: int = 350
     chunk_overlap: int = 50

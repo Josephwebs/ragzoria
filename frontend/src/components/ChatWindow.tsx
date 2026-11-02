@@ -15,9 +15,10 @@ interface ChatWindowProps {
   loading: boolean;
   onInputChange: (value: string) => void;
   onSubmit: () => void;
+  onConfirmation: (choice: "confirm" | "cancel") => void;
 }
 
-export function ChatWindow({ messages, input, loading, onInputChange, onSubmit }: ChatWindowProps) {
+export function ChatWindow({ messages, input, loading, onInputChange, onSubmit, onConfirmation }: ChatWindowProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   function handleSubmit(event: FormEvent) {
@@ -39,7 +40,43 @@ export function ChatWindow({ messages, input, loading, onInputChange, onSubmit }
             <article className={`message ${message.role}`} key={`${message.role}-${index}`}>
               <div className="message-author">{message.role === "user" ? "Usuario" : "Ragzor"}</div>
               <p>{message.content}</p>
+              {message.response ? (
+                <p className="tools-used">
+                  <strong>Herramienta usada:</strong>{" "}
+                  {message.response.tools_used.length
+                    ? message.response.tools_used.join(", ")
+                    : "Ninguna"}
+                </p>
+              ) : null}
+              {message.response?.plan.length ? (
+                <details className="plan">
+                  <summary>Ver plan</summary>
+                  <ol>{message.response.plan.map((step, stepIndex) => <li key={stepIndex}>{step}</li>)}</ol>
+                </details>
+              ) : null}
               {message.response?.used_rag ? <SourcesPanel sources={message.response.sources} /> : null}
+              {message.response?.activity.length ? (
+                <details className="activity">
+                  <summary>Actividad</summary>
+                  <ul>{message.response.activity.map((item, itemIndex) => <li key={itemIndex}>{item}</li>)}</ul>
+                </details>
+              ) : null}
+              {message.response?.needs_confirmation && index === messages.length - 1 ? (
+                <div className="pending-card">
+                  <strong>Accion pendiente</strong>
+                  <span>{message.response.pending_action?.summary}</span>
+                  <p>{message.response.pending_action?.details}</p>
+                  <small>
+                    Expira: {message.response.pending_action?.expires_at
+                      ? new Date(message.response.pending_action.expires_at).toLocaleString()
+                      : "sin fecha"}
+                  </small>
+                  <div className="confirmation-actions">
+                    <button disabled={loading} onClick={() => onConfirmation("confirm")}>Confirmar ticket</button>
+                    <button disabled={loading} onClick={() => onConfirmation("cancel")}>Cancelar</button>
+                  </div>
+                </div>
+              ) : null}
             </article>
           ))
         )}

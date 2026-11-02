@@ -8,6 +8,7 @@ services:
       EMBEDDING_MODEL: ${EMBEDDING_MODEL:-bge-m3}
       OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-http://host.docker.internal:11434}
       FAISS_PERSIST_DIR: /code/storage/faiss_simple
+      DATABASE_PATH: /code/storage/ragzor.db
       DATA_DIR: /code/data
     ports:
       - "8000:8000"

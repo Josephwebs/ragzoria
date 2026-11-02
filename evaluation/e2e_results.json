@@ -1,0 +1,1097 @@
+[
+  {
+    "id": "TEST-01",
+    "scenario": "Saludo normal",
+    "expected": "Respuesta coherente sin tools, RAG, tickets ni confirmacion.",
+    "status": "PASS",
+    "evidence": {
+      "answer": "Hola! Soy Ragzor, un agente de Mesa de Ayuda TI. Puedo ayudarte con políticas, procedimientos o requisitos TI. ¿En qué puedo ayudarte?",
+      "thread_id": "qa-01",
+      "used_rag": false,
+      "plan": [
+        "Comprender el saludo y responder brevemente",
+        "Revisar la documentación para determinar la solicitud",
+        "Consultar tickets o solicitudes anteriores en SQLite"
+      ],
+      "sources": [],
+      "needs_confirmation": false,
+      "pending_action": null,
+      "activity": [],
+      "_http_status": 200
+    }
+  },
+  {
+    "id": "TEST-02",
+    "scenario": "Consulta documental VPN",
+    "expected": "Usar buscar_documentacion y citar contenido real de VPN.",
+    "status": "PASS",
+    "evidence": {
+      "answer": "Hola! Según la documentación oficial, para configurar la VPN corporativa, el equipo debe estar registrado en inventario TI, tener antivirus activo, sistema operativo actualizado y cliente VPN GlobalProtect versión 6 o superior. Además, el usuario debe contar con MFA activo antes de iniciar sesión remota. ¿Puedes confirmarme si tienes todos estos requisitos cumplidos?",
+      "thread_id": "qa-02",
+      "used_rag": true,
+      "plan": [
+        "Consultar la documentación oficial de la empresa sobre la configuración de la VPN corporativa.",
+        "Revisar los datos faltantes, como la dirección IP y el nombre de dominio del servidor VPN, para asegurarse de que se tienen todos los elementos necesarios para la configuración.",
+        "Verificar la compatibilidad de la VPN con el dispositivo y la versión del sistema operativo utilizado."
+      ],
+      "sources": [
+        {
+          "source": "manual_vpn.md",
+          "tipo_fuente": "internal",
+          "categoria": "internal",
+          "seccion": "Requisitos",
+          "fragment": "Manual de Conexion VPN Corporativa\nRequisitos\nPara usar la VPN corporativa el equipo debe estar registrado en inventario TI, tener antivirus activo, sistema operativo actualizado y cliente VPN GlobalProtect version 6 o superior. El usuario debe contar con MFA activo antes de iniciar sesion remota."
+        },
+        {
+          "source": "manual_vpn.md",
+          "tipo_fuente": "internal",
+          "categoria": "internal",
+          "seccion": "Conexion",
+          "fragment": "Manual de Conexion VPN Corporativa\nConexion\nEl usuario debe abrir GlobalProtect, ingresar el portal vpn.ragzor.local y autenticarse con credenciales corporativas. Luego debe aprobar el segundo factor desde Microsoft Authenticator. Una conexion correcta muestra el estado \"Connected\" y asigna una IP del rango 10.80.0.0/16."
+        }
+      ],
+      "needs_confirmation": false,
+      "pending_action": null,
+      "activity": [
+        "Consulto documentacion."
+      ],
+      "_http_status": 200
+    }
+  },
+  {
+    "id": "TEST-03",
+    "scenario": "Consulta documental SAP",
+    "expected": "Recuperar requisitos desde procedimiento_acceso_sap.md.",
+    "status": "PASS",
+    "evidence": {
+      "answer": "Para solicitar acceso a SAP, debes crear una solicitud en el portal interno de Mesa de Ayuda bajo la categoría \"Accesos > SAP\". La solicitud debe incluir el módulo requerido, sociedad, centro de costo y justificación operacional. El jefe directo debe aprobar la solicitud antes de que Seguridad TI habilite el perfil.",
+      "thread_id": "qa-03",
+      "used_rag": true,
+      "plan": [
+        "Consultar la documentación oficial de SAP para entender los requisitos de acceso",
+        "Revisar los datos faltantes sobre la cuenta y el rol que se necesita para el acceso",
+        "Completar el formulario de solicitud de acceso con la información requerida",
+        "Revisar y confirmar la solicitud con la persona responsable de autorizar el acceso"
+      ],
+      "sources": [
+        {
+          "source": "procedimiento_acceso_sap.md",
+          "tipo_fuente": "internal",
+          "categoria": "internal",
+          "seccion": "Solicitud",
+          "fragment": "Procedimiento de Acceso a SAP\nSolicitud"
+        },
+        {
+          "source": "procedimiento_acceso_sap.md",
+          "tipo_fuente": "internal",
+          "categoria": "internal",
+          "seccion": "Solicitud",
+          "fragment": "Solicitud\nLos colaboradores que requieran acceso a SAP deben crear una solicitud en el portal interno de Mesa de Ayuda bajo la categoria \"Accesos > SAP\". La solicitud debe indicar modulo requerido, sociedad, centro de costo y justificacion operacional. El jefe directo debe aprobar la solicitud antes de que Seguridad TI habilite el perfil."
+        }
+      ],
+      "needs_confirmation": false,
+      "pending_action": null,
+      "activity": [
+        "Consulto documentacion."
+      ],
+      "_http_status": 200
+    }
+  },
+  {
+    "id": "TEST-04",
+    "scenario": "Informacion insuficiente",
+    "expected": "Preguntar datos faltantes sin crear ticket ni inventar datos.",
+    "status": "PASS",
+    "evidence": {
+      "answer": "Entiendo que el acceso administrador es considerado de alto riesgo y requiere aprobación y registro de ventana de uso, motivo, plan de reversa y evidencia de cambio autorizado. ¿Puedes proporcionarme más información sobre el rol actual del usuario y su cuenta para determinar si se cumple con los requisitos?",
+      "thread_id": "qa-04",
+      "used_rag": true,
+      "plan": [
+        "Consultar la documentación sobre procedimientos de acceso administrador",
+        "Revisar datos faltantes sobre la cuenta del usuario y su rol actual",
+        "Verificar si hay algún requisito adicional para obtener el acceso administrador"
+      ],
+      "sources": [
+        {
+          "source": "politica_minimo_privilegio.md",
+          "tipo_fuente": "internal",
+          "categoria": "internal",
+          "seccion": "Acceso administrador",
+          "fragment": "Politica de Minimo Privilegio\nAcceso administrador\nEl acceso administrador se considera de alto riesgo. Debe ser temporal, estar justificado, contar con aprobaciones de sistema critico cuando aplique y quedar sujeto a revision posterior."
+        },
+        {
+          "source": "politica_acceso_servidores.md",
+          "tipo_fuente": "internal",
+          "categoria": "internal",
+          "seccion": "Ambientes productivos",
+          "fragment": "Politica de Acceso a Servidores\nAmbientes productivos\nLos accesos a produccion requieren aprobacion del jefe directo, dueno del servicio y Seguridad TI. Para privilegios administrativos se debe registrar ventana de uso, motivo, plan de reversa y evidencia de cambio autorizado."
+        }
+      ],
+      "needs_confirmation": false,
+      "pending_action": null,
+      "activity": [
+        "Consulto documentacion."
+      ],
+      "_http_status": 200
+    }
+  },
+  {
+    "id": "TEST-05",
+    "scenario": "Conversacion de varios turnos",
+    "expected": "Conservar produccion, duracion, servidor e incidente; pedir solo datos restantes.",
+    "status": "PASS",
+    "evidence": {
+      "messages": [
+        "Necesito acceso administrador a producción",
+        "Por dos semanas",
+        "El servidor es srv-pagos-01",
+        "Es por el incidente INC-200"
+      ],
+      "responses": [
+        {
+          "answer": "¿Puede proporcionar la justificación para el acceso administrador y la cuenta actual que se va a utilizar?",
+          "thread_id": "qa-05",
+          "used_rag": true,
+          "plan": [
+            "Consultar la documentación de acceso administrador a producción para comprender los requisitos y procedimientos",
+            "Revisar datos faltantes sobre la cuenta actual y la justificación para el acceso administrador",
+            "Verificar la existencia de tickets o solicitudes previas relacionadas con el acceso administrador",
+            "Preparar la solicitud para confirmación humana con los datos y justificación necesarios"
+          ],
+          "sources": [
+            {
+              "source": "politica_acceso_servidores.md",
+              "tipo_fuente": "internal",
+              "categoria": "internal",
+              "seccion": "Ambientes productivos",
+              "fragment": "Politica de Acceso a Servidores\nAmbientes productivos\nLos accesos a produccion requieren aprobacion del jefe directo, dueno del servicio y Seguridad TI. Para privilegios administrativos se debe registrar ventana de uso, motivo, plan de reversa y evidencia de cambio autorizado."
+            },
+            {
+              "source": "matriz_accesos_por_cargo.md",
+              "tipo_fuente": "internal",
+              "categoria": "internal",
+              "seccion": "Produccion",
+              "fragment": "Matriz de Accesos por Cargo\nProduccion\nNingun cargo recibe acceso administrador permanente a produccion por defecto. El acceso productivo se solicita caso a caso segun minimo privilegio, aprobaciones y duracion documentada."
+            }
+          ],
+          "needs_confirmation": false,
+          "pending_action": null,
+          "activity": [
+            "Consulto documentacion.",
+            "Solicito informacion adicional."
+          ],
+          "_http_status": 200
+        },
+        {
+          "answer": "¿Cuál es el cargo actual del usuario y qué es el servicio que se va a utilizar para justificar el acceso administrador temporal?",
+          "thread_id": "qa-05",
+          "used_rag": true,
+          "plan": [
+            "Consultar la documentación de política de acceso a servidores para entender los requisitos para obtener acceso administrador a producción.",
+            "Revisar la matriz de accesos por cargo para determinar si el cargo actual justifica el acceso administrador temporal.",
+            "Proporcionar la justificación para el acceso administrador y la cuenta actual que se va a utilizar, especificando la duración del acceso (dos semanas) y el plan de reversa."
+          ],
+          "sources": [
+            {
+              "source": "politica_acceso_servidores.md",
+              "tipo_fuente": "internal",
+              "categoria": "internal",
+              "seccion": "Ambientes productivos",
+              "fragment": "Politica de Acceso a Servidores\nAmbientes productivos\nLos accesos a produccion requieren aprobacion del jefe directo, dueno del servicio y Seguridad TI. Para privilegios administrativos se debe registrar ventana de uso, motivo, plan de reversa y evidencia de cambio autorizado."
+            },
+            {
+              "source": "matriz_accesos_por_cargo.md",
+              "tipo_fuente": "internal",
+              "categoria": "internal",
+              "seccion": "Produccion",
+              "fragment": "Matriz de Accesos por Cargo\nProduccion\nNingun cargo recibe acceso administrador permanente a produccion por defecto. El acceso productivo se solicita caso a caso segun minimo privilegio, aprobaciones y duracion documentada."
+            }
+          ],
+          "needs_confirmation": false,
+          "pending_action": null,
+          "activity": [
+            "Solicito informacion adicional."
+          ],
+          "_http_status": 200
+        },
+        {
+          "answer": "¿Cuál es el cargo actual del usuario y qué es el servicio que se va a utilizar para justificar el acceso administrador temporal?",
+          "thread_id": "qa-05",
+          "used_rag": true,
+          "plan": [
+            "Consultar la documentación de política de acceso a servidores para entender los requisitos para obtener acceso administrador a producción.",
+            "Revisar la matriz de accesos por cargo para determinar si el cargo actual del usuario justifica el acceso administrador temporal.",
+            "Revisar la cuenta actual que se va a utilizar y determinar si se puede utilizar para justificar el acceso administrador temporal.",
+            "Preparar la solicitud para confirmación humana con la justificación proporcionada y la cuenta actual que se va a utilizar."
+          ],
+          "sources": [
+            {
+              "source": "politica_acceso_servidores.md",
+              "tipo_fuente": "internal",
+              "categoria": "internal",
+              "seccion": "Ambientes productivos",
+              "fragment": "Politica de Acceso a Servidores\nAmbientes productivos\nLos accesos a produccion requieren aprobacion del jefe directo, dueno del servicio y Seguridad TI. Para privilegios administrativos se debe registrar ventana de uso, motivo, plan de reversa y evidencia de cambio autorizado."
+            },
+            {
+              "source": "matriz_accesos_por_cargo.md",
+              "tipo_fuente": "internal",
+              "categoria": "internal",
+              "seccion": "Produccion",
+              "fragment": "Matriz de Accesos por Cargo\nProduccion\nNingun cargo recibe acceso administrador permanente a produccion por defecto. El acceso productivo se solicita caso a caso segun minimo privilegio, aprobaciones y duracion documentada."
+            }
+          ],
+          "needs_confirmation": false,
+          "pending_action": null,
+          "activity": [
+            "Solicito informacion adicional."
+          ],
+          "_http_status": 200
+        },
+        {
+          "answer": "Antes de preparar el ticket necesito: ventana de uso, plan de reversa, cambio autorizado.",
+          "thread_id": "qa-05",
+          "used_rag": true,
+          "plan": [
+            "Consultar la documentación de política de acceso a servidores para entender los requisitos para obtener acceso administrador a producción.",
+            "Revisar la matriz de accesos por cargo para determinar si el cargo actual del usuario justifica el acceso administrador temporal.",
+            "Revisar la solicitud de incidente INC-200 para determinar si el acceso administrador temporal es necesario para resolver el incidente y justificar la duración de dos semanas."
+          ],
+          "sources": [
+            {
+              "source": "politica_acceso_servidores.md",
+              "tipo_fuente": "internal",
+              "categoria": "internal",
+              "seccion": "Ambientes productivos",
+              "fragment": "Politica de Acceso a Servidores\nAmbientes productivos\nLos accesos a produccion requieren aprobacion del jefe directo, dueno del servicio y Seguridad TI. Para privilegios administrativos se debe registrar ventana de uso, motivo, plan de reversa y evidencia de cambio autorizado."
+            },
+            {
+              "source": "matriz_accesos_por_cargo.md",
+              "tipo_fuente": "internal",
+              "categoria": "internal",
+              "seccion": "Produccion",
+              "fragment": "Matriz de Accesos por Cargo\nProduccion\nNingun cargo recibe acceso administrador permanente a produccion por defecto. El acceso productivo se solicita caso a caso segun minimo privilegio, aprobaciones y duracion documentada."
+            }
+          ],
+          "needs_confirmation": false,
+          "pending_action": null,
+          "activity": [
+            "Actualizo el plan ante la nueva informacion.",
+            "Detecto parametros obligatorios faltantes antes de preparar la escritura."
+          ],
+          "_http_status": 200
+        }
+      ]
+    }
+  },
+  {
+    "id": "TEST-06",
+    "scenario": "Replanificacion",
+    "expected": "Cambiar plan y ejecutar nueva busqueda al pasar de produccion a pruebas.",
+    "status": "PASS",
+    "evidence": {
+      "initial": {
+        "answer": "¿Puede proporcionar la justificación para el acceso administrador y la cuenta actual que se va a utilizar?",
+        "thread_id": "qa-06",
+        "used_rag": true,
+        "plan": [
+          "Consultar la documentación de acceso administrador a producción para comprender los requisitos y procedimientos",
+          "Revisar datos faltantes sobre la cuenta actual y la justificación para el acceso administrador",
+          "Verificar la existencia de tickets o solicitudes previas relacionadas con el acceso administrador",
+          "Preparar la solicitud para confirmación humana con los datos y justificación necesarios"
+        ],
+        "sources": [
+          {
+            "source": "politica_acceso_servidores.md",
+            "tipo_fuente": "internal",
+            "categoria": "internal",
+            "seccion": "Ambientes productivos",
+            "fragment": "Politica de Acceso a Servidores\nAmbientes productivos\nLos accesos a produccion requieren aprobacion del jefe directo, dueno del servicio y Seguridad TI. Para privilegios administrativos se debe registrar ventana de uso, motivo, plan de reversa y evidencia de cambio autorizado."
+          },
+          {
+            "source": "matriz_accesos_por_cargo.md",
+            "tipo_fuente": "internal",
+            "categoria": "internal",
+            "seccion": "Produccion",
+            "fragment": "Matriz de Accesos por Cargo\nProduccion\nNingun cargo recibe acceso administrador permanente a produccion por defecto. El acceso productivo se solicita caso a caso segun minimo privilegio, aprobaciones y duracion documentada."
+          }
+        ],
+        "needs_confirmation": false,
+        "pending_action": null,
+        "activity": [
+          "Consulto documentacion.",
+          "Solicito informacion adicional."
+        ],
+        "_http_status": 200
+      },
+      "updated": {
+        "answer": "No encontre documentacion especifica compatible con servidores de pruebas. No aplicare requisitos exclusivos de produccion. Indica servidor, rol, duracion y justificacion para continuar.",
+        "thread_id": "qa-06",
+        "used_rag": false,
+        "plan": [
+          "Actualizar el objetivo vigente a un servidor de pruebas.",
+          "Consultar documentacion aplicable a ambientes no productivos.",
+          "Solicitar los datos faltantes para el nuevo objetivo."
+        ],
+        "sources": [],
+        "needs_confirmation": false,
+        "pending_action": null,
+        "activity": [
+          "Actualizo el plan ante el cambio de ambiente.",
+          "La consulta documental no encontro resultados compatibles."
+        ],
+        "_http_status": 200
+      }
+    }
+  },
+  {
+    "id": "TEST-07",
+    "scenario": "Creacion de ticket",
+    "expected": "No escribir antes de confirmar y crear exactamente un ticket al confirmar.",
+    "status": "PASS",
+    "evidence": {
+      "before": 0,
+      "prepared": {
+        "answer": "Tengo los antecedentes necesarios. ¿Deseas que cree el ticket?",
+        "thread_id": "qa-07",
+        "used_rag": true,
+        "plan": [
+          "Consultar la documentación de acceso administrador en producción para obtener información sobre los procedimientos y requisitos necesarios.",
+          "Revisar los datos faltantes sobre INC-701 y CHG-701 para comprender el contexto y los motivos del acceso administrador.",
+          "Verificar la disponibilidad de srv-qa-01 durante la ventana de 18:00-20:00 y confirmar que no haya conflictos con otros cambios o mantenimientos programados.",
+          "Preparar la solicitud para confirmación humana, incluyendo la justificación del acceso administrador y el plan de reversa para retirar el rol después de dos semanas."
+        ],
+        "sources": [
+          {
+            "source": "politica_acceso_servidores.md",
+            "tipo_fuente": "internal",
+            "categoria": "internal",
+            "seccion": "Ambientes productivos",
+            "fragment": "Politica de Acceso a Servidores\nAmbientes productivos\nLos accesos a produccion requieren aprobacion del jefe directo, dueno del servicio y Seguridad TI. Para privilegios administrativos se debe registrar ventana de uso, motivo, plan de reversa y evidencia de cambio autorizado."
+          },
+          {
+            "source": "matriz_accesos_por_cargo.md",
+            "tipo_fuente": "internal",
+            "categoria": "internal",
+            "seccion": "Produccion",
+            "fragment": "Matriz de Accesos por Cargo\nProduccion\nNingun cargo recibe acceso administrador permanente a produccion por defecto. El acceso productivo se solicita caso a caso segun minimo privilegio, aprobaciones y duracion documentada."
+          }
+        ],
+        "needs_confirmation": true,
+        "pending_action": {
+          "id": "62db9c61-7fab-46ff-a38c-98b491dda7fc",
+          "type": "create_ticket",
+          "summary": "Acceso administrador temporal a produccion",
+          "details": "Necesito acceso administrador a produccion en srv-qa-01 por dos semanas debido a INC-701, ventana 18:00-20:00, cambio CHG-701 y el plan de reversa es retirar el rol.",
+          "status": "pending",
+          "created_at": "2026-11-02T22:00:33.384620+00:00",
+          "expires_at": "2026-11-02T22:15:33.384620+00:00"
+        },
+        "activity": [
+          "Consulto documentacion.",
+          "Solicito confirmacion para crear el ticket."
+        ],
+        "_http_status": 200
+      },
+      "between": 0,
+      "confirmed": {
+        "answer": "Ticket #1 creado correctamente. Estado: open.",
+        "thread_id": "qa-07",
+        "used_rag": true,
+        "plan": [
+          "Consultar la documentación de política de acceso a servidores para confirmar los requisitos para obtener acceso administrador a producción en srv-qa-01.",
+          "Revisar la matriz de accesos por cargo para determinar el cargo que requiere acceso administrativo y verificar si se cumple con los requisitos de aprobación y duración documentada.",
+          "Revisar datos faltantes para completar la solicitud de acceso administrador, incluyendo la ventana de uso, el motivo y el plan de reversa."
+        ],
+        "sources": [
+          {
+            "source": "politica_acceso_servidores.md",
+            "tipo_fuente": "internal",
+            "categoria": "internal",
+            "seccion": "Ambientes productivos",
+            "fragment": "Politica de Acceso a Servidores\nAmbientes productivos\nLos accesos a produccion requieren aprobacion del jefe directo, dueno del servicio y Seguridad TI. Para privilegios administrativos se debe registrar ventana de uso, motivo, plan de reversa y evidencia de cambio autorizado."
+          },
+          {
+            "source": "matriz_accesos_por_cargo.md",
+            "tipo_fuente": "internal",
+            "categoria": "internal",
+            "seccion": "Produccion",
+            "fragment": "Matriz de Accesos por Cargo\nProduccion\nNingun cargo recibe acceso administrador permanente a produccion por defecto. El acceso productivo se solicita caso a caso segun minimo privilegio, aprobaciones y duracion documentada."
+          }
+        ],
+        "needs_confirmation": false,
+        "pending_action": null,
+        "activity": [
+          "Actualizo el plan ante la nueva informacion.",
+          "Registro ticket #1 de forma idempotente."
+        ],
+        "_http_status": 200
+      },
+      "after": 1
+    }
+  },
+  {
+    "id": "TEST-08",
+    "scenario": "Cancelacion",
+    "expected": "Cancelar invalida la accion y una confirmacion posterior no escribe.",
+    "status": "PASS",
+    "evidence": {
+      "prepared": {
+        "answer": "Tengo los antecedentes necesarios. ¿Deseas que cree el ticket?",
+        "thread_id": "qa-08",
+        "used_rag": true,
+        "plan": [
+          "Consultar la documentación de acceso administrador en srv-qa-02 para comprender los requisitos y procedimientos",
+          "Revisar datos faltantes sobre INC-702 y CHG-702 para entender el contexto y los impactos",
+          "Revisar la agenda de la ventana de 18:00-20:00 para asegurarse de que no hay conflictos con otros cambios o actividades",
+          "Preparar la solicitud para confirmación humana, incluyendo la justificación y el plan de reversa para retirar el rol después de dos semanas"
+        ],
+        "sources": [
+          {
+            "source": "politica_acceso_servidores.md",
+            "tipo_fuente": "internal",
+            "categoria": "internal",
+            "seccion": "Ambientes productivos",
+            "fragment": "Politica de Acceso a Servidores\nAmbientes productivos\nLos accesos a produccion requieren aprobacion del jefe directo, dueno del servicio y Seguridad TI. Para privilegios administrativos se debe registrar ventana de uso, motivo, plan de reversa y evidencia de cambio autorizado."
+          },
+          {
+            "source": "matriz_accesos_por_cargo.md",
+            "tipo_fuente": "internal",
+            "categoria": "internal",
+            "seccion": "Produccion",
+            "fragment": "Matriz de Accesos por Cargo\nProduccion\nNingun cargo recibe acceso administrador permanente a produccion por defecto. El acceso productivo se solicita caso a caso segun minimo privilegio, aprobaciones y duracion documentada."
+          }
+        ],
+        "needs_confirmation": true,
+        "pending_action": {
+          "id": "420670ae-82ce-45a4-899f-fd8864f33cc6",
+          "type": "create_ticket",
+          "summary": "Acceso administrador temporal a produccion",
+          "details": "Necesito acceso administrador a produccion en srv-qa-02 por dos semanas debido a INC-702, ventana 18:00-20:00, cambio CHG-702 y el plan de reversa es retirar el rol.",
+          "status": "pending",
+          "created_at": "2026-11-02T22:00:46.829950+00:00",
+          "expires_at": "2026-11-02T22:15:46.829950+00:00"
+        },
+        "activity": [
+          "Consulto documentacion.",
+          "Solicito confirmacion para crear el ticket."
+        ],
+        "_http_status": 200
+      },
+      "cancelled": {
+        "answer": "Entendido. No creare el ticket.",
+        "thread_id": "qa-08",
+        "used_rag": true,
+        "plan": [
+          "Consultar la documentación de acceso administrador en srv-qa-02 para entender los requisitos y procedimientos.",
+          "Revisar datos faltantes sobre el cambio CHG-702 y el plan de reversa para retirar el rol.",
+          "Preparar la solicitud para confirmación humana, incluyendo la ventana de uso (18:00-20:00) y el motivo (INC-702)."
+        ],
+        "sources": [
+          {
+            "source": "politica_acceso_servidores.md",
+            "tipo_fuente": "internal",
+            "categoria": "internal",
+            "seccion": "Ambientes productivos",
+            "fragment": "Politica de Acceso a Servidores\nAmbientes productivos\nLos accesos a produccion requieren aprobacion del jefe directo, dueno del servicio y Seguridad TI. Para privilegios administrativos se debe registrar ventana de uso, motivo, plan de reversa y evidencia de cambio autorizado."
+          },
+          {
+            "source": "matriz_accesos_por_cargo.md",
+            "tipo_fuente": "internal",
+            "categoria": "internal",
+            "seccion": "Produccion",
+            "fragment": "Matriz de Accesos por Cargo\nProduccion\nNingun cargo recibe acceso administrador permanente a produccion por defecto. El acceso productivo se solicita caso a caso segun minimo privilegio, aprobaciones y duracion documentada."
+          }
+        ],
+        "needs_confirmation": false,
+        "pending_action": null,
+        "activity": [
+          "Actualizo el plan ante la nueva informacion.",
+          "Cancelo la creacion del ticket."
+        ],
+        "_http_status": 200
+      },
+      "pending_row": {
+        "id": "420670ae-82ce-45a4-899f-fd8864f33cc6",
+        "type": "create_ticket",
+        "thread_id": "qa-08",
+        "user_id": "qa-cancel",
+        "summary": "Acceso administrador temporal a produccion",
+        "details": "Necesito acceso administrador a produccion en srv-qa-02 por dos semanas debido a INC-702, ventana 18:00-20:00, cambio CHG-702 y el plan de reversa es retirar el rol.",
+        "status": "cancelled",
+        "created_at": "2026-11-02T22:00:46.829950+00:00",
+        "expires_at": "2026-11-02T22:15:46.829950+00:00",
+        "ticket_id": null
+      },
+      "retry": {
+        "answer": "No hay una accion pendiente valida para confirmar o cancelar.",
+        "thread_id": "qa-08",
+        "used_rag": true,
+        "plan": [
+          "Consultar la documentación de acceso administrador en srv-qa-02 para entender los requisitos y procedimientos.",
+          "Revisar datos faltantes sobre el cambio CHG-702 y el plan de reversa para retirar el rol.",
+          "Revisar la ventana de uso (18:00-20:00) y el motivo (INC-702) para confirmar la solicitud.",
+          "Preparar la solicitud para confirmación humana, sin otorgar o configurar accesos."
+        ],
+        "sources": [
+          {
+            "source": "politica_acceso_servidores.md",
+            "tipo_fuente": "internal",
+            "categoria": "internal",
+            "seccion": "Ambientes productivos",
+            "fragment": "Politica de Acceso a Servidores\nAmbientes productivos\nLos accesos a produccion requieren aprobacion del jefe directo, dueno del servicio y Seguridad TI. Para privilegios administrativos se debe registrar ventana de uso, motivo, plan de reversa y evidencia de cambio autorizado."
+          },
+          {
+            "source": "matriz_accesos_por_cargo.md",
+            "tipo_fuente": "internal",
+            "categoria": "internal",
+            "seccion": "Produccion",
+            "fragment": "Matriz de Accesos por Cargo\nProduccion\nNingun cargo recibe acceso administrador permanente a produccion por defecto. El acceso productivo se solicita caso a caso segun minimo privilegio, aprobaciones y duracion documentada."
+          }
+        ],
+        "needs_confirmation": false,
+        "pending_action": null,
+        "activity": [
+          "Actualizo el plan ante la nueva informacion.",
+          "Rechazo una confirmacion sin accion pendiente."
+        ],
+        "_http_status": 200
+      },
+      "tickets": 0
+    }
+  },
+  {
+    "id": "TEST-09",
+    "scenario": "Confirmacion duplicada",
+    "expected": "Dos consumos conservan un solo ticket y el mismo ID.",
+    "status": "PASS",
+    "evidence": {
+      "prepared": {
+        "answer": "Tengo los antecedentes necesarios. ¿Deseas que cree el ticket?",
+        "thread_id": "qa-09",
+        "used_rag": true,
+        "plan": [
+          "Consultar la documentación de acceso administrador en srv-qa-03 para comprender los requisitos y procedimientos",
+          "Revisar datos faltantes sobre INC-703 y CHG-703 para entender el contexto y los motivos del acceso",
+          "Verificar la disponibilidad del rol administrador en la ventana especificada (18:00-20:00) y confirmar la duración de dos semanas",
+          "Preparar la solicitud para confirmación humana, incluyendo la información necesaria para el análisis y aprobación"
+        ],
+        "sources": [
+          {
+            "source": "politica_acceso_servidores.md",
+            "tipo_fuente": "internal",
+            "categoria": "internal",
+            "seccion": "Ambientes productivos",
+            "fragment": "Politica de Acceso a Servidores\nAmbientes productivos\nLos accesos a produccion requieren aprobacion del jefe directo, dueno del servicio y Seguridad TI. Para privilegios administrativos se debe registrar ventana de uso, motivo, plan de reversa y evidencia de cambio autorizado."
+          },
+          {
+            "source": "matriz_accesos_por_cargo.md",
+            "tipo_fuente": "internal",
+            "categoria": "internal",
+            "seccion": "Produccion",
+            "fragment": "Matriz de Accesos por Cargo\nProduccion\nNingun cargo recibe acceso administrador permanente a produccion por defecto. El acceso productivo se solicita caso a caso segun minimo privilegio, aprobaciones y duracion documentada."
+          }
+        ],
+        "needs_confirmation": true,
+        "pending_action": {
+          "id": "898c9004-afee-4a45-a946-22ce2035a9c2",
+          "type": "create_ticket",
+          "summary": "Acceso administrador temporal a produccion",
+          "details": "Necesito acceso administrador a produccion en srv-qa-03 por dos semanas debido a INC-703, ventana 18:00-20:00, cambio CHG-703 y el plan de reversa es retirar el rol.",
+          "status": "pending",
+          "created_at": "2026-11-02T22:01:03.120525+00:00",
+          "expires_at": "2026-11-02T22:16:03.120525+00:00"
+        },
+        "activity": [
+          "Consulto documentacion.",
+          "Solicito confirmacion para crear el ticket."
+        ],
+        "_http_status": 200
+      },
+      "first": {
+        "id": 2,
+        "user_id": "qa-duplicate",
+        "summary": "Acceso administrador temporal a produccion",
+        "details": "Necesito acceso administrador a produccion en srv-qa-03 por dos semanas debido a INC-703, ventana 18:00-20:00, cambio CHG-703 y el plan de reversa es retirar el rol.",
+        "status": "open",
+        "created_at": "2026-11-02T22:01:03.129067+00:00"
+      },
+      "first_created": true,
+      "second": {
+        "id": 2,
+        "user_id": "qa-duplicate",
+        "summary": "Acceso administrador temporal a produccion",
+        "details": "Necesito acceso administrador a produccion en srv-qa-03 por dos semanas debido a INC-703, ventana 18:00-20:00, cambio CHG-703 y el plan de reversa es retirar el rol.",
+        "status": "open",
+        "created_at": "2026-11-02T22:01:03.129067+00:00"
+      },
+      "second_created": false,
+      "tickets": 1
+    }
+  },
+  {
+    "id": "TEST-10",
+    "scenario": "Confirmaciones no autorizadas",
+    "expected": "Rechazar inexistente, expirada, cancelada, otro usuario/thread y reemplazada.",
+    "status": "PASS",
+    "evidence": {
+      "results": {
+        "usuario": "La accion pendiente no pertenece a este usuario y conversacion.",
+        "thread": "La accion pendiente no pertenece a este usuario y conversacion.",
+        "cancelada": "La accion ya no esta disponible: cancelled.",
+        "expirada": "La confirmacion expiro; prepara una nueva solicitud.",
+        "reemplazada": "La accion ya no esta disponible: cancelled.",
+        "inexistente": "La accion pendiente no pertenece a este usuario y conversacion."
+      },
+      "tickets_before": 0,
+      "tickets_after": 0,
+      "replacement_active": "3b6dde76-7de6-4d4e-9326-b448597b47a9"
+    }
+  },
+  {
+    "id": "TEST-11",
+    "scenario": "Memoria corta",
+    "expected": "Recordar SAP en el mismo thread sin reenviar history.",
+    "status": "PASS",
+    "evidence": {
+      "first": {
+        "answer": "Entiendo que los problemas de acceso a SAP pueden deberse a rol no asignado, usuario bloqueado o falta de aprobación. Para avanzar en este problema, necesito saber más sobre el estado del usuario en SAP. ¿Puede proporcionarme información sobre el rol del usuario y su estado actual en SAP?",
+        "thread_id": "qa-11",
+        "used_rag": true,
+        "plan": [
+          "Consultar la documentación oficial de SAP para comprender los requisitos de acceso y los procedimientos para resolver el problema.",
+          "Revisar los datos faltantes sobre el usuario y el sistema para determinar qué tipo de acceso se necesita.",
+          "Verificar si el problema se relaciona con una configuración específica o un problema técnico en el sistema."
+        ],
+        "sources": [
+          {
+            "source": "faq_soporte.md",
+            "tipo_fuente": "internal",
+            "categoria": "internal",
+            "seccion": "SAP",
+            "fragment": "Preguntas Frecuentes de Soporte TI\nSAP\nLos problemas de acceso a SAP pueden deberse a rol no asignado, usuario bloqueado o falta de aprobacion. La Mesa de Ayuda debe revisar el estado del usuario en SAP antes de escalar."
+          },
+          {
+            "source": "procedimiento_acceso_sap.md",
+            "tipo_fuente": "internal",
+            "categoria": "internal",
+            "seccion": "Solicitud",
+            "fragment": "Procedimiento de Acceso a SAP\nSolicitud"
+          }
+        ],
+        "needs_confirmation": false,
+        "pending_action": null,
+        "activity": [
+          "Consulto documentacion."
+        ],
+        "_http_status": 200
+      },
+      "second": {
+        "answer": "Estabamos hablando de SAP.",
+        "thread_id": "qa-11",
+        "used_rag": true,
+        "plan": [
+          "Revisar la documentación de SAP para comprender el estado actual del usuario y su rol en el sistema.",
+          "Consultar la base de datos de SAP para obtener información sobre el rol del usuario y su estado actual.",
+          "Revisar la configuración de acceso del usuario en SAP para determinar si el problema se debe a una falta de aprobación o rol no asignado."
+        ],
+        "sources": [
+          {
+            "source": "faq_soporte.md",
+            "tipo_fuente": "internal",
+            "categoria": "internal",
+            "seccion": "SAP",
+            "fragment": "Preguntas Frecuentes de Soporte TI\nSAP\nLos problemas de acceso a SAP pueden deberse a rol no asignado, usuario bloqueado o falta de aprobacion. La Mesa de Ayuda debe revisar el estado del usuario en SAP antes de escalar."
+          },
+          {
+            "source": "procedimiento_acceso_sap.md",
+            "tipo_fuente": "internal",
+            "categoria": "internal",
+            "seccion": "Solicitud",
+            "fragment": "Procedimiento de Acceso a SAP\nSolicitud"
+          }
+        ],
+        "needs_confirmation": false,
+        "pending_action": null,
+        "activity": [
+          "Actualizo el plan ante la nueva informacion."
+        ],
+        "_http_status": 200
+      }
+    }
+  },
+  {
+    "id": "TEST-12",
+    "scenario": "Aislamiento de conversaciones",
+    "expected": "Separar mismo thread entre usuarios y distintos threads del mismo usuario.",
+    "status": "PASS",
+    "evidence": {
+      "setup": [
+        {
+          "answer": "Entendido. Para proceder con la solicitud de acceso a SAP, necesito saber más sobre el usuario y el equipo que requiere el acceso. ¿Puedes proporcionarme los datos faltantes sobre el usuario y el equipo?",
+          "thread_id": "demo-1",
+          "used_rag": true,
+          "plan": [
+            "Consultar la documentación oficial de SAP para comprender los requisitos y procedimientos para el acceso",
+            "Revisar los datos faltantes sobre el usuario y el equipo que requiere el acceso",
+            "Verificar la configuración actual de la seguridad en el sistema SAP y determinar qué tipo de acceso se necesita",
+            "Preparar la solicitud para confirmación humana con los detalles necesarios para aprobar el acceso"
+          ],
+          "sources": [
+            {
+              "source": "procedimiento_acceso_sap.md",
+              "tipo_fuente": "internal",
+              "categoria": "internal",
+              "seccion": "Solicitud",
+              "fragment": "Procedimiento de Acceso a SAP\nSolicitud"
+            },
+            {
+              "source": "faq_soporte.md",
+              "tipo_fuente": "internal",
+              "categoria": "internal",
+              "seccion": "SAP",
+              "fragment": "Preguntas Frecuentes de Soporte TI\nSAP\nLos problemas de acceso a SAP pueden deberse a rol no asignado, usuario bloqueado o falta de aprobacion. La Mesa de Ayuda debe revisar el estado del usuario en SAP antes de escalar."
+            }
+          ],
+          "needs_confirmation": false,
+          "pending_action": null,
+          "activity": [
+            "Consulto documentacion."
+          ],
+          "_http_status": 200
+        },
+        {
+          "answer": "Entiendo que para revisar acceso a VPN, debemos verificar internet, versión del cliente, estado de MFA y fecha del sistema. También es importante aprobar el segundo factor desde Microsoft Authenticator. ¿Puedes proporcionarme más detalles sobre la cuenta de usuario y la configuración actual que deseas revisar?",
+          "thread_id": "demo-1",
+          "used_rag": true,
+          "plan": [
+            "Consultar la documentación oficial de la VPN para comprender los requisitos y procedimientos",
+            "Revisar los datos faltantes sobre la cuenta de usuario y la configuración actual",
+            "Verificar la compatibilidad con los dispositivos y sistemas involucrados",
+            "Revisar la configuración actual de la VPN y los permisos asociados"
+          ],
+          "sources": [
+            {
+              "source": "faq_soporte.md",
+              "tipo_fuente": "internal",
+              "categoria": "internal",
+              "seccion": "VPN",
+              "fragment": "Preguntas Frecuentes de Soporte TI\nVPN\nSi la VPN no conecta, se debe verificar internet, version del cliente, estado de MFA y fecha del sistema. Si el error afecta a varios usuarios, se revisa primero el gateway corporativo."
+            },
+            {
+              "source": "manual_vpn.md",
+              "tipo_fuente": "internal",
+              "categoria": "internal",
+              "seccion": "Conexion",
+              "fragment": "Manual de Conexion VPN Corporativa\nConexion\nEl usuario debe abrir GlobalProtect, ingresar el portal vpn.ragzor.local y autenticarse con credenciales corporativas. Luego debe aprobar el segundo factor desde Microsoft Authenticator. Una conexion correcta muestra el estado \"Connected\" y asigna una IP del rango 10.80.0.0/16."
+            }
+          ],
+          "needs_confirmation": false,
+          "pending_action": null,
+          "activity": [
+            "Consulto documentacion."
+          ],
+          "_http_status": 200
+        },
+        {
+          "answer": "Entiendo que estás revisando acceso MFA. La documentación oficial sugiere que la MFA debe ser combinada con controles basados en políticas para que el acceso a recursos sensibles requiera una verificación más fuerte. ¿Puedes proporcionarme más información sobre la configuración actual de acceso y la implementación de MFA que deseas revisar?",
+          "thread_id": "demo-2",
+          "used_rag": true,
+          "plan": [
+            "Consultar la documentación oficial de MFA para comprender los requisitos y procedimientos",
+            "Revisar los datos faltantes sobre la configuración actual de acceso y la implementación de MFA",
+            "Verificar la compatibilidad de MFA con los dispositivos y aplicaciones utilizadas"
+          ],
+          "sources": [
+            {
+              "source": "microsoft_conditional_access_overview.md",
+              "tipo_fuente": "external",
+              "categoria": "external",
+              "seccion": "MFA enforcement",
+              "fragment": "Microsoft Entra Conditional Access Overview\nMFA enforcement\nA common Conditional Access pattern is requiring MFA when users access Microsoft 365, Azure or other sensitive resources. Organizations should test policies before broad rollout and avoid excluding emergency access accounts from documented governance."
+            },
+            {
+              "source": "microsoft_entra_mfa_overview.md",
+              "tipo_fuente": "external",
+              "categoria": "external",
+              "seccion": "Recommended use",
+              "fragment": "Microsoft Entra MFA Overview\nRecommended use\nFor organizational access, MFA should be combined with policy-based controls so that high-risk or sensitive access requires stronger verification. In a corporate support context, this external guidance supports the internal decision to require MFA for VPN, password recovery and cloud applications."
+            }
+          ],
+          "needs_confirmation": false,
+          "pending_action": null,
+          "activity": [
+            "Consulto documentacion."
+          ],
+          "_http_status": 200
+        }
+      ],
+      "answers": {
+        "a1": {
+          "answer": "Estabamos hablando de SAP.",
+          "thread_id": "demo-1",
+          "used_rag": true,
+          "plan": [
+            "Comprender el saludo y responder brevemente: 'Estoy revisando acceso a SAP'.",
+            "Revisar documentación y datos faltantes para preparar la solicitud de acceso a SAP.",
+            "Consultar la documentación de procedimiento de acceso a SAP y revisar el estado del usuario en SAP."
+          ],
+          "sources": [
+            {
+              "source": "procedimiento_acceso_sap.md",
+              "tipo_fuente": "internal",
+              "categoria": "internal",
+              "seccion": "Solicitud",
+              "fragment": "Procedimiento de Acceso a SAP\nSolicitud"
+            },
+            {
+              "source": "faq_soporte.md",
+              "tipo_fuente": "internal",
+              "categoria": "internal",
+              "seccion": "SAP",
+              "fragment": "Preguntas Frecuentes de Soporte TI\nSAP\nLos problemas de acceso a SAP pueden deberse a rol no asignado, usuario bloqueado o falta de aprobacion. La Mesa de Ayuda debe revisar el estado del usuario en SAP antes de escalar."
+            }
+          ],
+          "needs_confirmation": false,
+          "pending_action": null,
+          "activity": [
+            "Actualizo el plan ante la nueva informacion."
+          ],
+          "_http_status": 200
+        },
+        "b1": {
+          "answer": "Estabamos hablando de VPN.",
+          "thread_id": "demo-1",
+          "used_rag": true,
+          "plan": [
+            "Comprender el sistema de autenticación corporativo y verificar la configuración actual de la cuenta de usuario.",
+            "Revisar la documentación de la VPN para comprender los requisitos de autenticación y configuración.",
+            "Consultar la base de datos de SQLite para obtener información sobre las solicitudes previas y los problemas similares."
+          ],
+          "sources": [
+            {
+              "source": "faq_soporte.md",
+              "tipo_fuente": "internal",
+              "categoria": "internal",
+              "seccion": "VPN",
+              "fragment": "Preguntas Frecuentes de Soporte TI\nVPN\nSi la VPN no conecta, se debe verificar internet, version del cliente, estado de MFA y fecha del sistema. Si el error afecta a varios usuarios, se revisa primero el gateway corporativo."
+            },
+            {
+              "source": "manual_vpn.md",
+              "tipo_fuente": "internal",
+              "categoria": "internal",
+              "seccion": "Conexion",
+              "fragment": "Manual de Conexion VPN Corporativa\nConexion\nEl usuario debe abrir GlobalProtect, ingresar el portal vpn.ragzor.local y autenticarse con credenciales corporativas. Luego debe aprobar el segundo factor desde Microsoft Authenticator. Una conexion correcta muestra el estado \"Connected\" y asigna una IP del rango 10.80.0.0/16."
+            }
+          ],
+          "needs_confirmation": false,
+          "pending_action": null,
+          "activity": [
+            "Actualizo el plan ante la nueva informacion."
+          ],
+          "_http_status": 200
+        },
+        "a2": {
+          "answer": "Estabamos hablando de MFA.",
+          "thread_id": "demo-2",
+          "used_rag": true,
+          "plan": [
+            "Comprender la configuración actual de acceso y la implementación de MFA que deseas revisar",
+            "Revisar la documentación oficial para obtener más información sobre la configuración y la implementación de MFA",
+            "Consultar la documentación de Microsoft para obtener información específica sobre la configuración de acceso MFA"
+          ],
+          "sources": [
+            {
+              "source": "microsoft_conditional_access_overview.md",
+              "tipo_fuente": "external",
+              "categoria": "external",
+              "seccion": "MFA enforcement",
+              "fragment": "Microsoft Entra Conditional Access Overview\nMFA enforcement\nA common Conditional Access pattern is requiring MFA when users access Microsoft 365, Azure or other sensitive resources. Organizations should test policies before broad rollout and avoid excluding emergency access accounts from documented governance."
+            },
+            {
+              "source": "microsoft_entra_mfa_overview.md",
+              "tipo_fuente": "external",
+              "categoria": "external",
+              "seccion": "Recommended use",
+              "fragment": "Microsoft Entra MFA Overview\nRecommended use\nFor organizational access, MFA should be combined with policy-based controls so that high-risk or sensitive access requires stronger verification. In a corporate support context, this external guidance supports the internal decision to require MFA for VPN, password recovery and cloud applications."
+            }
+          ],
+          "needs_confirmation": false,
+          "pending_action": null,
+          "activity": [
+            "Actualizo el plan ante la nueva informacion."
+          ],
+          "_http_status": 200
+        }
+      }
+    }
+  },
+  {
+    "id": "TEST-13",
+    "scenario": "Memoria larga",
+    "expected": "Recuperar desde SQLite en un thread nuevo.",
+    "status": "PASS",
+    "evidence": {
+      "database_ticket": {
+        "id": 1,
+        "user_id": "qa-create",
+        "summary": "Acceso administrador temporal a produccion",
+        "details": "Necesito acceso administrador a produccion en srv-qa-01 por dos semanas debido a INC-701, ventana 18:00-20:00, cambio CHG-701 y el plan de reversa es retirar el rol.",
+        "status": "open",
+        "created_at": "2026-11-02T22:00:38.266982+00:00"
+      },
+      "new_thread_response": {
+        "answer": "Tu ultima solicitud fue el ticket #1: Acceso administrador temporal a produccion. Estado: open.",
+        "thread_id": "qa-13-new",
+        "used_rag": false,
+        "plan": [
+          "Consultar la documentación para obtener información sobre las solicitudes anteriores",
+          "Revisar la base de datos SQLite para obtener el número de la última solicitud",
+          "Verificar la información de la solicitud para confirmar la identidad del usuario"
+        ],
+        "sources": [],
+        "needs_confirmation": false,
+        "pending_action": null,
+        "activity": [
+          "Consulto tickets."
+        ],
+        "_http_status": 200
+      }
+    }
+  },
+  {
+    "id": "TEST-14",
+    "scenario": "Multiples tickets",
+    "expected": "Listar dos IDs, reconocer el mas reciente y consultar el anterior.",
+    "status": "PASS",
+    "evidence": {
+      "older": {
+        "id": 3,
+        "user_id": "qa-many",
+        "summary": "Acceso SAP lectura",
+        "details": "Perfil consulta",
+        "status": "open",
+        "created_at": "2026-11-02T22:01:48.267711+00:00"
+      },
+      "newer": {
+        "id": 4,
+        "user_id": "qa-many",
+        "summary": "Acceso VPN temporal",
+        "details": "Siete dias",
+        "status": "open",
+        "created_at": "2026-11-02T22:01:48.271568+00:00"
+      },
+      "list": {
+        "answer": "Tus solicitudes recientes son: #4 Acceso VPN temporal (open); #3 Acceso SAP lectura (open).",
+        "thread_id": "qa-14-list",
+        "used_rag": false,
+        "plan": [
+          "Consultar la documentación para obtener información sobre las solicitudes en curso",
+          "Revisar los datos faltantes en la base de datos SQLite para obtener una visión general de las solicitudes",
+          "Verificar la prioridad de las solicitudes y priorizar las que requieren atención inmediata"
+        ],
+        "sources": [],
+        "needs_confirmation": false,
+        "pending_action": null,
+        "activity": [
+          "Consulto tickets."
+        ],
+        "_http_status": 200
+      },
+      "latest": {
+        "answer": "Tu ultima solicitud fue el ticket #4: Acceso VPN temporal. Estado: open.",
+        "thread_id": "qa-14-latest",
+        "used_rag": false,
+        "plan": [
+          "Consultar la documentación para obtener información sobre las solicitudes anteriores",
+          "Revisar la base de datos SQLite para obtener el número de la última solicitud",
+          "Verificar la información de la solicitud para confirmar la identidad del usuario"
+        ],
+        "sources": [],
+        "needs_confirmation": false,
+        "pending_action": null,
+        "activity": [
+          "Consulto tickets."
+        ],
+        "_http_status": 200
+      },
+      "previous": {
+        "answer": "Tu ticket anterior al ultimo fue el #3: Acceso SAP lectura. Estado: open.",
+        "thread_id": "qa-14-previous",
+        "used_rag": false,
+        "plan": [
+          "Consultar la documentación para obtener información sobre el estado actual del ticket",
+          "Revisar los datos faltantes en la base de datos SQLite para confirmar el estado del ticket"
+        ],
+        "sources": [],
+        "needs_confirmation": false,
+        "pending_action": null,
+        "activity": [
+          "Consulto tickets."
+        ],
+        "_http_status": 200
+      }
+    }
+  },
+  {
+    "id": "TEST-16A",
+    "scenario": "Ticket inexistente",
+    "expected": "Responder controladamente sin inventar ticket.",
+    "status": "PASS",
+    "evidence": {
+      "answer": "No encontre tickets anteriores para tu usuario.",
+      "thread_id": "qa-16",
+      "used_rag": false,
+      "plan": [
+        "Consultar la documentación para obtener información sobre el ticket #999999",
+        "Revisar datos faltantes en la base de datos SQLite para obtener detalles del ticket",
+        "Verificar el estado actual del ticket en la plataforma de tickets"
+      ],
+      "sources": [],
+      "needs_confirmation": false,
+      "pending_action": null,
+      "activity": [
+        "Consulto tickets."
+      ],
+      "_http_status": 200
+    }
+  },
+  {
+    "id": "TEST-16B",
+    "scenario": "Documentacion insuficiente",
+    "expected": "No inventar una politica ausente y exponer las fuentes recuperadas.",
+    "status": "PASS",
+    "evidence": {
+      "answer": "La política interna para comprar computadores cuánticos no se menciona en la documentación oficial. Sin embargo, se sugiere la implementación de políticas de acceso condicional y autenticación multifactor para proteger la seguridad y privacidad de los datos cuánticos.",
+      "thread_id": "qa-16-docs",
+      "used_rag": true,
+      "plan": [
+        "Consultar la documentación oficial de la empresa sobre la política de compra de computadores cuánticos",
+        "Revisar los datos faltantes sobre los requisitos técnicos y presupuestarios para la compra",
+        "Verificar la disponibilidad de fondos y recursos para la compra",
+        "Revisar la política de seguridad y privacidad para la gestión de datos cuánticos"
+      ],
+      "sources": [
+        {
+          "source": "microsoft_conditional_access_overview.md",
+          "tipo_fuente": "external",
+          "categoria": "external",
+          "seccion": "Policy engine",
+          "fragment": "Microsoft Entra Conditional Access Overview\nPolicy engine\nMicrosoft Entra Conditional Access is a policy engine that evaluates signals such as user, device, location, application and detected risk. Policies can require actions such as multifactor authentication, compliant device checks or blocking access."
+        },
+        {
+          "source": "microsoft_entra_mfa_overview.md",
+          "tipo_fuente": "external",
+          "categoria": "external",
+          "seccion": "Recommended use",
+          "fragment": "Microsoft Entra MFA Overview\nRecommended use\nFor organizational access, MFA should be combined with policy-based controls so that high-risk or sensitive access requires stronger verification. In a corporate support context, this external guidance supports the internal decision to require MFA for VPN, password recovery and cloud applications."
+        }
+      ],
+      "needs_confirmation": false,
+      "pending_action": null,
+      "activity": [
+        "Consulto documentacion."
+      ],
+      "_http_status": 200
+    }
+  }
+]

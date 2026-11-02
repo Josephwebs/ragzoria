@@ -1,4 +1,6 @@
-from typing import Literal
+from __future__ import annotations
+
+from typing import Literal, Optional
 from pydantic import BaseModel, Field, field_validator
 
 class Message(BaseModel):
@@ -7,6 +9,10 @@ class Message(BaseModel):
 
 class ChatRequest(BaseModel):
     message: str = Field(min_length=1, max_length=1500)
+    thread_id: Optional[str] = Field(default=None, min_length=1, max_length=100)
+    user_id: str = Field(default="demo-user", min_length=1, max_length=100)
+    confirmation: Optional[Literal["confirm", "cancel"]] = None
+    # Kept temporarily for backwards-compatible clients; LangGraph owns context now.
     history: list[Message] = Field(default_factory=list, max_length=6)
 
     @field_validator("message")
@@ -23,7 +29,22 @@ class Source(BaseModel):
     seccion: str
     fragment: str
 
+class PendingAction(BaseModel):
+    id: str
+    type: Literal["create_ticket"]
+    summary: str
+    details: str
+    status: Literal["pending"]
+    created_at: str
+    expires_at: str
+
 class ChatResponse(BaseModel):
     answer: str
+    thread_id: str
     used_rag: bool
+    plan: list[str] = Field(default_factory=list)
     sources: list[Source] = Field(default_factory=list)
+    needs_confirmation: bool = False
+    pending_action: Optional[PendingAction] = None
+    activity: list[str] = Field(default_factory=list)
+    tools_used: list[str] = Field(default_factory=list)
